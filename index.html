@@ -3,1673 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KenzoHex | Free Fire Hub</title>
-    <meta name="description" content="KenzoHex - Ultimate Free Fire Hub. Panels, Tools, Downloads & Macros.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>KenzoHex - Free Fire Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-dark: #030811;
-            --bg-card: rgba(10, 15, 30, 0.85);
-            --neon-primary: #00f0ff;
-            --neon-secondary: #ff00a0;
-            --neon-tertiary: #39ff14;
-            --text-primary: #e0e6ed;
-            --text-secondary: #8b95a5;
-            --border-glow: rgba(0, 240, 255, 0.3);
-            --rgb-phase: 0deg;
+        @keyframes rgbGlow {
+            0% { border-color: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); }
+            33% { border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); }
+            66% { border-color: #7928ca; box-shadow: 0 0 20px rgba(121, 40, 202, 0.4); }
+            100% { border-color: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); }
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* RGB Background Glow Animation */
-        @keyframes rgbShift {
-            0% { --rgb-phase: 0deg; filter: hue-rotate(0deg); }
-            100% { --rgb-phase: 360deg; filter: hue-rotate(360deg); }
-        }
-
-        .rgb-glow {
-            animation: rgbShift 8s linear infinite;
-        }
-
-        /* Background Particles */
-        .bg-glow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .glow-1 { top: -200px; left: -200px; background: #00f0ff; animation: float 20s ease-in-out infinite; }
-        .glow-2 { bottom: -200px; right: -200px; background: #ff00a0; animation: float 25s ease-in-out infinite reverse; }
-        .glow-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: #39ff14; animation: float 22s ease-in-out infinite; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        /* Announcement Ticker */
-        .ticker-wrap {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, rgba(0,240,255,0.1), rgba(255,0,160,0.1), rgba(57,255,20,0.1));
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            overflow: hidden;
-            height: 36px;
-            display: flex;
-            align-items: center;
-        }
-
-        .ticker {
-            display: inline-flex;
-            white-space: nowrap;
-            animation: ticker 30s linear infinite;
-            padding-left: 100%;
-        }
-
-        .ticker-item {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 60px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .ticker-item::before {
-            content: "▶";
-            margin-right: 10px;
-            color: var(--neon-primary);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        /* Social Header */
-        .social-header {
-            position: fixed;
-            top: 36px;
-            right: 20px;
-            z-index: 999;
-            display: flex;
-            gap: 12px;
-            background: rgba(3, 8, 17, 0.8);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .social-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            padding: 2px;
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        .social-icon:hover::before { opacity: 1; }
-        .social-icon:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 0 20px rgba(0,240,255,0.4); }
-
-        .social-icon svg { width: 18px; height: 18px; fill: white; }
-
-        /* Main Container */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            padding-top: 80px;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            padding: 2rem;
-        }
-
-        /* 3D Glowing Title */
-        .hero-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(3rem, 10vw, 7rem);
-            font-weight: 900;
-            letter-spacing: 8px;
-            position: relative;
-            margin-bottom: 1rem;
-            cursor: default;
-            user-select: none;
-        }
-
-        .hero-title .char {
-            display: inline-block;
-            animation: rgbText 3s ease-in-out infinite;
-            text-shadow: 
-                0 0 10px currentColor,
-                0 0 20px currentColor,
-                0 0 40px currentColor,
-                0 0 80px currentColor;
-        }
-
-        @keyframes rgbText {
-            0%, 100% { color: #00f0ff; }
-            33% { color: #ff00a0; }
-            66% { color: #39ff14; }
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.5s both;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Server Status */
-        .server-status {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 12px 24px;
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.7s both;
-            backdrop-filter: blur(10px);
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background: #39ff14;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
-            animation: blink 2s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .status-text { font-weight: 600; letter-spacing: 2px; }
-
-        .player-counter {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            color: var(--neon-primary);
-            text-shadow: 0 0 10px var(--neon-primary);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            max-width: 600px;
-            width: 100%;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease-out 0.9s both;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: left 0.5s;
-        }
-
-        .stat-card:hover::before { left: 100%; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--neon-primary); box-shadow: 0 10px 30px rgba(0,240,255,0.1); }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--neon-primary);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
-        }
-
-        /* 3D Interactive Character */
-        .character-container {
-            position: fixed;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 280px;
-            height: 400px;
-            z-index: 50;
-            perspective: 1000px;
-            cursor: grab;
-            display: none;
-        }
-
-        @media (min-width: 1200px) {
-            .character-container { display: block; }
-        }
-
-        .character-container:active { cursor: grabbing; }
-
-        .character-scene {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-
-        .character-hint {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            opacity: 0.7;
-            animation: fadeInOut 3s ease-in-out infinite;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* Character Parts (CSS 3D Composition) */
-        .char-part {
-            position: absolute;
-            transform-style: preserve-3d;
-        }
-
-        .char-head {
-            width: 80px;
-            height: 90px;
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-            border-radius: 20px 20px 30px 30px;
-            top: 20px;
-            left: 100px;
-            border: 2px solid #444;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 15px rgba(0,240,255,0.2);
-        }
-
-        .char-visor {
-            width: 60px;
-            height: 25px;
-            background: linear-gradient(90deg, #00f0ff, #0080ff);
-            border-radius: 10px;
-            top: 35px;
-            left: 10px;
-            box-shadow: 0 0 15px rgba(0,240,255,0.6);
-            animation: visorGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes visorGlow {
-            from { box-shadow: 0 0 15px rgba(0,240,255,0.6); }
-            to { box-shadow: 0 0 25px rgba(0,240,255,0.9), 0 0 40px rgba(0,240,255,0.4); }
-        }
-
-        .char-body {
-            width: 100px;
-            height: 120px;
-            background: linear-gradient(180deg, #333, #1a1a1a);
-            border-radius: 20px;
-            top: 110px;
-            left: 90px;
-            border: 2px solid #444;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-        }
-
-        .char-chest {
-            width: 60px;
-            height: 40px;
-            background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(255,0,160,0.2));
-            border-radius: 10px;
-            top: 20px;
-            left: 20px;
-            border: 1px solid rgba(0,240,255,0.3);
-        }
-
-        .char-arm-left, .char-arm-right {
-            width: 30px;
-            height: 90px;
-            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
-            border-radius: 15px;
-            top: 120px;
-            border: 2px solid #444;
-        }
-
-        .char-arm-left { left: 50px; transform: rotateZ(10deg); }
-        .char-arm-right { left: 200px; transform: rotateZ(-10deg); }
-
-        .char-leg-left, .char-leg-right {
-            width: 35px;
-            height: 100px;
-            background: linear-gradient(180deg, #2a2a2a, #0a0a0a);
-            border-radius: 15px;
-            top: 230px;
-            border: 2px solid #444;
-        }
-
-        .char-leg-left { left: 95px; }
-        .char-leg-right { left: 150px; }
-
-        .char-weapon {
-            width: 20px;
-            height: 80px;
-            background: linear-gradient(180deg, #444, #222);
-            border-radius: 5px;
-            top: 140px;
-            left: 220px;
-            transform: rotateZ(-30deg);
-            border: 1px solid #555;
-        }
-
-        .char-weapon::after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 15px;
-            background: #333;
-            top: -10px;
-            left: -10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-        }
-
-        /* Dragon Canvas */
-        #dragonCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        /* Section Styling */
-        section {
-            position: relative;
-            z-index: 10;
-            padding: 80px 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0 2rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
-            border-radius: 3px;
-            animation: rgbShift 4s linear infinite;
-        }
-
-        /* Panel Cards */
-        .panels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .panel-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 2.5rem;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
-            transform-style: preserve-3d;
-        }
-
-        .panel-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 2px;
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary), var(--neon-tertiary));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .panel-card:hover::before { opacity: 1; }
-        .panel-card:hover { transform: translateY(-10px) rotateX(5deg); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-
-        .panel-card.vip {
-            background: linear-gradient(135deg, rgba(255,0,160,0.1), rgba(100,0,200,0.1));
-            border-color: rgba(255,0,160,0.3);
-        }
-
-        .panel-card.vip::before {
-            opacity: 1;
-            animation: rgbRotate 3s linear infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes rgbRotate {
+        @keyframes bgShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .panel-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        body {
+            background-color: #030811;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
-        .badge-free { background: rgba(57, 255, 20, 0.15); color: var(--neon-tertiary); border: 1px solid rgba(57, 255, 20, 0.3); }
-        .badge-vip { 
-            background: linear-gradient(90deg, rgba(255,0,160,0.2), rgba(0,240,255,0.2)); 
-            color: #fff; 
-            border: 1px solid rgba(255,0,160,0.5);
-            animation: rgbShift 3s linear infinite;
+        .rgb-border {
+            animation: rgbGlow 6s infinite;
+            border-width: 2px;
+            border-style: solid;
         }
 
-        .panel-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .panel-features {
-            list-style: none;
-            margin: 1.5rem 0;
-        }
-
-        .panel-features li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .panel-features li::before {
-            content: "✓";
-            color: var(--neon-tertiary);
-            font-weight: bold;
-        }
-
-        .panel-features li.locked::before {
-            content: "🔒";
-            color: var(--neon-secondary);
-        }
-
-        .panel-features li.locked { color: var(--text-secondary); }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
+        /* Flying Dragon Canvas & Animation overlay */
+        #dragon-canvas {
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            pointer-events: none;
+            z-index: 50;
         }
 
-        .btn:hover::before { left: 100%; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--neon-primary), #0080ff);
-            color: #000;
-        }
-
-        .btn-vip {
-            background: linear-gradient(135deg, var(--neon-secondary), #8000ff);
-            color: #fff;
-            animation: rgbShift 4s linear infinite;
-        }
-
-        /* Downloads Section */
-        .download-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .download-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.4s ease;
-            transform-style: preserve-3d;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .download-card:hover {
-            transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
-            border-color: var(--neon-primary);
-            box-shadow: 0 15px 35px rgba(0,240,255,0.15);
-        }
-
-        .download-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 1rem;
-            background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,240,255,0.05));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            border: 1px solid rgba(0,240,255,0.2);
-        }
-
-        .download-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .download-meta { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
-
-        /* App Player Hubs */
-        .hubs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .hub-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .hub-card:hover { transform: translateY(-5px); border-color: var(--neon-primary); }
-
-        .hub-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .hub-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 900;
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-
-        .msi-logo { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; }
-        .bs-logo { background: linear-gradient(135deg, #0066ff, #003d99); color: white; }
-
-        .hub-name { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; }
-        .hub-type { color: var(--text-secondary); font-size: 0.85rem; }
-
-        .hub-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-        .btn-small {
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-small:hover {
-            background: rgba(0,240,255,0.1);
-            border-color: var(--neon-primary);
-            transform: translateY(-2px);
-        }
-
-        /* Tools Section */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tool-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .tool-card:hover {
-            border-color: var(--neon-tertiary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(57,255,20,0.1);
-        }
-
-        .tool-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .tool-name {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tool-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Contact Section */
-        .contact-container {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-container::before {
-            content: '';
+        /* Hero Anime Character - Confined to Hero Section ONLY */
+        .hero-anime-character {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .contact-content { position: relative; z-index: 1; }
-
-        .contact-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .contact-details {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin: 2rem 0;
-            align-items: center;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 24px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-
-        .contact-item:hover {
-            border-color: var(--neon-primary);
-            background: rgba(0,240,255,0.05);
-            transform: translateX(5px);
-        }
-
-        .contact-item span { color: var(--neon-primary); font-weight: 700; }
-
-        .whatsapp-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 40px;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: white;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
-            margin-top: 1rem;
-        }
-
-        .whatsapp-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            position: relative;
+            right: 5%;
+            bottom: 0;
+            max-height: 85%;
+            width: auto;
+            pointer-events: none;
             z-index: 10;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 128, 0.5));
+            animation: floatChar 4s ease-in-out infinite;
         }
 
-        .footer-brand {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            animation: rgbShift 6s linear infinite;
+        @keyframes floatChar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--neon-primary), var(--neon-secondary)); border-radius: 4px; }
-
-        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .social-header { top: 36px; right: 10px; padding: 6px 12px; gap: 8px; }
-            .social-icon { width: 30px; height: 30px; }
-            .hero { padding: 1rem; }
-            section { padding: 60px 1rem; }
-            .contact-container { padding: 2rem 1.5rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        /* Loading Animation */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Neon Border Animation */
-        @keyframes neonPulse {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary); }
-            50% { box-shadow: 0 0 20px var(--neon-primary), 0 0 40px var(--neon-primary); }
-        }
-
-        .neon-pulse {
-            animation: neonPulse 2s ease-in-out infinite;
+            .hero-anime-character {
+                opacity: 0.4;
+                right: 0;
+                max-height: 50%;
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-[#030811] text-white min-h-screen flex flex-col justify-between">
 
-    <!-- Background Glows -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
-    <div class="bg-glow glow-3"></div>
+    <canvas id="dragon-canvas"></canvas>
 
-    <!-- Dragon Canvas -->
-    <canvas id="dragonCanvas"></canvas>
+    <div class="bg-gradient-to-r from-purple-900 via-pink-600 to-indigo-900 text-xs sm:text-sm py-2 px-4 text-center font-bold tracking-wider overflow-hidden whitespace-nowrap shadow-md">
+        <marquee scrollamount="6">🔥 KENZOHEX PATCH V5.2 ACTIVE | 100% ANTI-BAN SAFE | DOWNLOAD LATEST FREE FIRE CONFIGS & PANELS NOW! 🔥</marquee>
+    </div>
 
-    <!-- Announcement Ticker -->
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available</div>
-            <div class="ticker-item">VIP Panel Updated with Auto-Headshot v3.2</div>
-            <div class="ticker-item">Free Fire Max 2.104.1 Global APK Released</div>
-            <div class="ticker-item">Anti-Ban System Status: OPERATIONAL</div>
-            <div class="ticker-item">MSI App Player 5.14 Configs Added</div>
-            <div class="ticker-item">24/7 Support via WhatsApp Active</div>
-            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available</div>
-            <div class="ticker-item">VIP Panel Updated with Auto-Headshot v3.2</div>
-            <div class="ticker-item">Free Fire Max 2.104.1 Global APK Released</div>
-            <div class="ticker-item">Anti-Ban System Status: OPERATIONAL</div>
+    <header class="w-full max-w-7xl mx-auto px-4 py-4 flex justify-between items-center z-40 relative">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400">KENZOHEX</span>
         </div>
-    </div>
-
-    <!-- Social Media Header -->
-    <div class="social-header">
-        <a href="https://wa.me/94761487975" class="social-icon" title="WhatsApp" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        </a>
-        <a href="#" class="social-icon" title="TikTok" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.88-2.89 2.89 2.89 0 012.88-2.89c.2 0 .39.03.58.07V9.51a6.27 6.27 0 00-1-.05A6.33 6.33 0 005 15.83a6.33 6.33 0 006.33 6.33 6.33 6.33 0 006.33-6.33V9.01a8.16 8.16 0 004.8 1.55V7.1a4.79 4.79 0 01-2.87-.41z"/></svg>
-        </a>
-        <a href="#" class="social-icon" title="Facebook" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </a>
-    </div>
-
-    <!-- 3D Interactive Character -->
-    <div class="character-container" id="characterContainer">
-        <div class="character-scene" id="characterScene">
-            <div class="char-part char-head">
-                <div class="char-visor"></div>
-            </div>
-            <div class="char-part char-body">
-                <div class="char-chest"></div>
-            </div>
-            <div class="char-part char-arm-left"></div>
-            <div class="char-part char-arm-right"></div>
-            <div class="char-part char-leg-left"></div>
-            <div class="char-part char-leg-right"></div>
-            <div class="char-part char-weapon"></div>
+        <div class="flex items-center space-x-3 sm:space-x-4">
+            <a href="https://wa.me/94761487975" target="_blank" class="bg-green-600 hover:bg-green-500 text-white p-2 rounded-full transition transform hover:scale-110 shadow-lg" title="WhatsApp">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+            <a href="#" class="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-full transition transform hover:scale-110 shadow-lg" title="TikTok">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+            </a>
         </div>
-        <div class="character-hint">Drag to Rotate • Scroll to Zoom</div>
-    </div>
+    </header>
 
-    <div class="main-container">
+    <main class="w-full max-w-7xl mx-auto px-4 flex-grow">
 
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1 class="hero-title" id="heroTitle">KENZOHEX</h1>
-            <p class="hero-subtitle">Ultimate Free Fire Command Center</p>
-            
-            <div class="server-status">
-                <div class="status-dot"></div>
-                <span class="status-text">SERVER ONLINE</span>
-                <span style="color: var(--text-secondary);">|</span>
-                <span class="player-counter" id="playerCounter">142,893</span>
-                <span style="color: var(--text-secondary); font-size: 0.85rem;">Active Players</span>
+        <section class="relative min-h-[450px] sm:min-h-[500px] flex flex-col justify-center items-start py-10 px-6 my-6 rounded-3xl rgb-border bg-gradient-to-br from-zinc-900/90 via-[#0a1128]/80 to-black overflow-hidden">
+            <img src="c71089c6749616fdbc4906fd57d90698.jpg" alt="Anime Girl Character" class="hero-anime-character">
+
+            <div class="z-20 max-w-xl">
+                <span class="inline-block bg-pink-600/20 text-pink-400 border border-pink-500/40 text-xs font-semibold px-3 py-1 rounded-full mb-4">ULTIMATE GAMING HUB</span>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 drop-shadow-lg">
+                    KENZOHEX PANEL
+                </h1>
+                <p class="text-zinc-300 text-sm sm:text-base mb-6 leading-relaxed">
+                    Access high-performance Free Fire tweaks, VIP panels, macro tools, and secure optimizations. Built for professional players.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#panels" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                        Get Panels
+                    </i></a>
+                    <a href="#downloads" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-bold px-6 py-3 rounded-xl transition">
+                        Downloads
+                    </a>
+                </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">⬇️</div>
-                    <div class="stat-value" id="downloadCount">50K+</div>
-                    <div class="stat-label">Downloads</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-value">99.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🛡️</div>
-                    <div class="stat-value">SAFE</div>
-                    <div class="stat-label">Anti-Ban</div>
-                </div>
+            <div class="mt-8 z-20 flex items-center space-x-6 text-xs sm:text-sm text-zinc-400 border-t border-zinc-800 pt-4 w-full">
+                <div>🟢 Live Status: <span class="text-green-400 font-bold">Online</span></div>
+                <div>👥 Active Users: <span class="text-cyan-400 font-bold" id="counter">1,482</span></div>
+                <div>🛡️ Anti-Ban: <span class="text-purple-400 font-bold">Safe v5</span></div>
             </div>
         </section>
 
-        <!-- Panel Selection -->
-        <section id="panels">
-            <h2 class="section-title fade-in">Choose Your Panel</h2>
-            <div class="panels-grid">
-                <div class="panel-card fade-in">
-                    <div class="panel-badge badge-free">Free</div>
-                    <h3 class="panel-title" style="color: var(--neon-tertiary);">Free Panel</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Standard tweaks for casual players. Get started with essential optimizations.</p>
-                    <ul class="panel-features">
-                        <li>Basic Sensitivity Configs</li>
-                        <li>Standard DPI Settings</li>
-                        <li>Community Macros</li>
-                        <li>Regular Updates</li>
-                        <li class="locked">Auto-Headshot</li>
-                        <li class="locked">VIP Support</li>
-                    </ul>
-                    <button class="btn btn-primary" onclick="alert('Free Panel download starting...')">
-                        <span>⬇️</span> Download Free Panel
+        <section id="panels" class="py-10">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
+                CHOOSE YOUR PANEL
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-zinc-500 font-bold">Standard</span>
+                        <h3 class="text-2xl font-bold mt-1 text-zinc-200">Free Panel</h3>
+                        <p class="text-zinc-400 text-sm mt-2">Basic tweaks and standard sensitivity presets for casual players.</p>
+                        <ul class="mt-4 space-y-2 text-sm text-zinc-300">
+                            <li>✓ Standard Sensitivity Tweaks</li>
+                            <li>✓ Basic Performance Boost</li>
+                            <li>✓ Anti-Lag Support</li>
+                        </ul>
+                    </div>
+                    <button class="mt-6 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 rounded-xl transition">
+                        Download Free Hub
                     </button>
                 </div>
 
-                <div class="panel-card vip fade-in">
-                    <div class="panel-badge badge-vip">VIP</div>
-                    <h3 class="panel-title" style="color: var(--neon-secondary);">VIP Panel</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Advanced features for competitive players. Dominate every match.</p>
-                    <ul class="panel-features">
-                        <li>Auto-Headshot v3.2</li>
-                        <li>Custom DPI + Sensitivity</li>
-                        <li>Premium Macro Library</li>
-                        <li>Priority Updates</li>
-                        <li>Anti-Ban Protection</li>
-                        <li>24/7 Direct Support</li>
-                    </ul>
-                    <button class="btn btn-vip" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
-                        <span>👑</span> Contact for VIP
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Downloads Section -->
-        <section id="downloads">
-            <h2 class="section-title fade-in">Downloads</h2>
-            <div class="download-grid">
-                <div class="download-card fade-in">
-                    <div class="download-icon">📱</div>
-                    <h3 class="download-title">Free Fire APK</h3>
-                    <p class="download-meta">v2.104.1 • Global • 180MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading Free Fire APK...')">
-                        <span>⬇️</span> Download APK
-                    </button>
-                </div>
-                <div class="download-card fade-in">
-                    <div class="download-icon">📦</div>
-                    <h3 class="download-title">Free Fire OBB</h3>
-                    <p class="download-meta">v2.104.1 • Global • 850MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading Free Fire OBB...')">
-                        <span>⬇️</span> Download OBB
-                    </button>
-                </div>
-                <div class="download-card fade-in">
-                    <div class="download-icon">🚀</div>
-                    <h3 class="download-title">FF Max APK</h3>
-                    <p class="download-meta">v2.104.1 • Max • 195MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading FF Max...')">
-                        <span>⬇️</span> Download Max
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- App Players Section -->
-        <section id="players">
-            <h2 class="section-title fade-in">App Player Hubs</h2>
-            <div class="hubs-grid">
-                <div class="hub-card fade-in">
-                    <div class="hub-header">
-                        <div class="hub-logo msi-logo">MSI</div>
-                        <div>
-                            <div class="hub-name">MSI App Player</div>
-                            <div class="hub-type">Optimized Gaming Hub</div>
-                        </div>
+                <div class="bg-gradient-to-br from-zinc-900 to-purple-950/60 rgb-border p-6 rounded-2xl shadow-2xl flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-3 right-3 bg-pink-600 text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded-full animate-pulse">
+                        VIP CHOICE
                     </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-                        Pre-configured MSI App Player with custom keymaps, sensitivity presets, and performance tweaks for Free Fire.
-                    </p>
-                    <div class="hub-actions">
-                        <a href="#" class="btn-small" onclick="alert('Opening MSI Configs...')">⚙️ Configs</a>
-                        <a href="#" class="btn-small" onclick="alert('Downloading Keymap...')">🎮 Keymap</a>
-                        <a href="#" class="btn-small" onclick="alert('Opening Macro Folder...')">📁 Macros</a>
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-pink-400 font-bold">Advanced Elite</span>
+                        <h3 class="text-2xl font-bold mt-1 text-white">Buy VIP Panel</h3>
+                        <p class="text-zinc-300 text-sm mt-2">Full access to professional custom features, high-end macro tools, and direct support.</p>
+                        <ul class="mt-4 space-y-2 text-sm text-zinc-200">
+                            <li>★ Full Headshot Macro Engine</li>
+                            <li>★ Zero Recoil Calibration</li>
+                            <li>★ 100% Anti-Ban Protection System</li>
+                            <li>★ Direct Developer WhatsApp Support</li>
+                        </ul>
                     </div>
-                </div>
-
-                <div class="hub-card fade-in">
-                    <div class="hub-header">
-                        <div class="hub-logo bs-logo">BS</div>
-                        <div>
-                            <div class="hub-name">BlueStacks</div>
-                            <div class="hub-type">Advanced Emulator Hub</div>
-                        </div>
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-                        BlueStacks 5/10 optimized profiles with FPS unlock, smart controls, and exclusive sensitivity configurations.
-                    </p>
-                    <div class="hub-actions">
-                        <a href="#" class="btn-small" onclick="alert('Opening BS Configs...')">⚙️ Configs</a>
-                        <a href="#" class="btn-small" onclick="alert('Downloading Profile...')">👤 Profile</a>
-                        <a href="#" class="btn-small" onclick="alert('Opening Tools...')">🔧 Tools</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tools Section -->
-        <section id="tools">
-            <h2 class="section-title fade-in">Tools & Extras</h2>
-            <div class="tools-grid">
-                <div class="tool-card fade-in" onclick="alert('Macro Tool coming soon!')">
-                    <span class="tool-icon">🎯</span>
-                    <div class="tool-name">Macro Engine</div>
-                    <div class="tool-desc">Auto-tap & recoil control</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Sensitivity Calculator opening...')">
-                    <span class="tool-icon">📊</span>
-                    <div class="tool-name">Sens Finder</div>
-                    <div class="tool-desc">Calculate perfect sensitivity</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('DPI Converter loading...')">
-                    <span class="tool-icon">🔍</span>
-                    <div class="tool-name">DPI Tool</div>
-                    <div class="tool-desc">Cross-device DPI converter</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('GFX Tool launching...')">
-                    <span class="tool-icon">🎨</span>
-                    <div class="tool-name">GFX Unlocker</div>
-                    <div class="tool-desc">Max graphics & FPS unlock</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Resolution Fixer opening...')">
-                    <span class="tool-icon">📐</span>
-                    <div class="tool-name">Res Fixer</div>
-                    <div class="tool-desc">Custom resolution settings</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Ping Optimizer starting...')">
-                    <span class="tool-icon">📡</span>
-                    <div class="tool-name">Ping Fix</div>
-                    <div class="tool-desc">Network latency optimizer</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact">
-            <h2 class="section-title fade-in">Get In Touch</h2>
-            <div class="contact-container fade-in">
-                <div class="contact-content">
-                    <h3 class="contact-title">Contact KenzoHex</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Need VIP access or have questions? Reach out directly. We typically respond within minutes.
-                    </p>
-                    
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <span>📱</span>
-                            <span>076 14 87 975</span>
-                        </div>
-                        <div class="contact-item">
-                            <span>✉️</span>
-                            <span>shamilshan536@gmail.com</span>
-                        </div>
-                        <div class="contact-item">
-                            <span>⏰</span>
-                            <span>Available 24/7</span>
-                        </div>
-                    </div>
-
-                    <a href="https://wa.me/94761487975?text=Hi%20KenzoHex!%20I'm%20interested%20in%20your%20VIP%20Panel." 
-                       class="whatsapp-btn" 
-                       target="_blank">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="margin-right: 8px;">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        Chat on WhatsApp
+                    <a href="https://wa.me/94761487975?text=Hi%20KenzoHex,%20I%20want%20to%20buy%20the%20VIP%20Panel!" target="_blank" class="mt-6 w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl text-center shadow-lg transition block">
+                        Buy VIP via WhatsApp
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer>
-            <div class="footer-brand">KENZOHEX</div>
-            <p>Free Fire Hub &copy; 2024. All rights reserved.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Not affiliated with Garena. Use at your own risk.</p>
-        </footer>
+        <section id="downloads" class="py-10">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-cyan-400">
+                DOWNLOADS & UPDATES
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <h4 class="font-bold text-lg">Free Fire Update APK</h4>
+                        <p class="text-xs text-zinc-400 mt-1">Latest Version v1.104.x</p>
+                    </div>
+                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition">
+                        Download APK
+                    </button>
+                </div>
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <h4 class="font-bold text-lg">OBB Data File</h4>
+                        <p class="text-xs text-zinc-400 mt-1">Optimized Fast Resource Pack</p>
+                    </div>
+                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition">
+                        Download OBB
+                    </button>
+                </div>
+            </div>
+        </section>
 
-    </div>
+        <section class="py-10">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+                APP PLAYER HUBS & TOOLS
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl text-center shadow-lg">
+                    <div class="text-3xl mb-2">💻</div>
+                    <h3 class="font-bold text-lg">MSI App Player Hub</h3>
+                    <p class="text-xs text-zinc-400 mt-2">Custom keymapping and high FPS optimization profile.</p>
+                </div>
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl text-center shadow-lg">
+                    <div class="text-3xl mb-2">⚡</div>
+                    <h3 class="font-bold text-lg">BlueStacks Hub</h3>
+                    <p class="text-xs text-zinc-400 mt-2">Tweaked registry settings for seamless performance.</p>
+                </div>
+                <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl text-center shadow-lg">
+                    <div class="text-3xl mb-2">🎯</div>
+                    <h3 class="font-bold text-lg">Macro & Sensitivity</h3>
+                    <p class="text-xs text-zinc-400 mt-2">Advanced DPI configurations and custom macro files.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-10 mb-10">
+            <div class="bg-gradient-to-r from-zinc-900 via-indigo-950/50 to-zinc-900 border border-zinc-800 p-8 rounded-3xl text-center shadow-2xl">
+                <h2 class="text-2xl font-extrabold mb-4">Official Contact & Support</h2>
+                <p class="text-zinc-400 text-sm mb-6">Have questions or need assistance with your panel? Connect directly via WhatsApp or Email.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm font-semibold">
+                    <span class="bg-zinc-800/80 px-4 py-2 rounded-xl border border-zinc-700">📞 076 14 87 975</span>
+                    <span class="bg-zinc-800/80 px-4 py-2 rounded-xl border border-zinc-700">✉️ shamilshan536@gmail.com</span>
+                </div>
+                <div class="mt-6">
+                    <a href="https://wa.me/94761487975" target="_blank" class="inline-block bg-green-600 hover:bg-green-500 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition transform hover:scale-105">
+                        Chat on WhatsApp Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full text-center py-6 border-t border-zinc-800 text-xs text-zinc-500">
+        &copy; 2026 KenzoHex. All rights reserved. Designed for Free Fire Community.
+    </footer>
 
     <script>
-        // ==========================================
-        // KENZOHEX - FREE FIRE HUB
-        // Complete Interactive Logic
-        // ==========================================
-
-        // 1. RGB Title Animation - Individual Character Coloring
-        const title = document.getElementById('heroTitle');
-        const text = title.textContent;
-        title.innerHTML = '';
-        text.split('').forEach((char, i) => {
-            const span = document.createElement('span');
-            span.className = 'char';
-            span.textContent = char;
-            span.style.animationDelay = `${i * 0.15}s`;
-            title.appendChild(span);
-        });
-
-        // 2. Live Player Counter Animation
-        const counter = document.getElementById('playerCounter');
-        let basePlayers = 142000;
-        
-        function updateCounter() {
-            const variation = Math.floor(Math.random() * 2000) - 1000;
-            const current = basePlayers + variation;
-            counter.textContent = current.toLocaleString();
-        }
-        
-        setInterval(updateCounter, 3000);
-        
-        // Animate counter on load
-        let count = 0;
-        const target = 142893;
-        const duration = 2000;
-        const increment = target / (duration / 16);
-        
-        function animateCounter() {
-            count += increment;
-            if (count < target) {
-                counter.textContent = Math.floor(count).toLocaleString();
-                requestAnimationFrame(animateCounter);
-            } else {
-                counter.textContent = target.toLocaleString();
-            }
-        }
-        setTimeout(animateCounter, 500);
-
-        // 3. Interactive 3D Character Drag Logic
-        const charContainer = document.getElementById('characterContainer');
-        const charScene = document.getElementById('characterScene');
-        let isDragging = false;
-        let startX, startY;
-        let currentRotateX = 0;
-        let currentRotateY = 0;
-        let autoRotate = true;
-        let autoRotateAngle = 0;
-
-        // Auto-rotation when not interacting
-        function autoRotateLoop() {
-            if (autoRotate && !isDragging) {
-                autoRotateAngle += 0.3;
-                charScene.style.transform = `rotateY(${autoRotateAngle}deg) rotateX(${Math.sin(autoRotateAngle * 0.02) * 5}deg)`;
-            }
-            requestAnimationFrame(autoRotateLoop);
-        }
-        autoRotateLoop();
-
-        charContainer.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            autoRotate = false;
-            startX = e.clientX;
-            startY = e.clientY;
-            charContainer.style.cursor = 'grabbing';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            currentRotateY += deltaX * 0.5;
-            currentRotateX -= deltaY * 0.5;
-            currentRotateX = Math.max(-45, Math.min(45, currentRotateX));
-            charScene.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
-            startX = e.clientX;
-            startY = e.clientY;
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            charContainer.style.cursor = 'grab';
-            setTimeout(() => { autoRotate = true; }, 3000);
-        });
-
-        // Touch support for mobile
-        charContainer.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            autoRotate = false;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, {passive: false});
-
-        document.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const deltaX = e.touches[0].clientX - startX;
-            const deltaY = e.touches[0].clientY - startY;
-            currentRotateY += deltaX * 0.8;
-            currentRotateX -= deltaY * 0.8;
-            currentRotateX = Math.max(-45, Math.min(45, currentRotateX));
-            charScene.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, {passive: false});
-
-        document.addEventListener('touchend', () => {
-            isDragging = false;
-            setTimeout(() => { autoRotate = true; }, 3000);
-        });
-
-        // Mouse wheel zoom
-        charContainer.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const scale = parseFloat(charScene.dataset.scale || 1);
-            const newScale = Math.max(0.5, Math.min(1.5, scale - e.deltaY * 0.001));
-            charScene.dataset.scale = newScale;
-            charScene.style.scale = newScale;
-        });
-
-        // 4. Dragon & Fire Canvas Animation
-        const canvas = document.getElementById('dragonCanvas');
+        const canvas = document.getElementById('dragon-canvas');
         const ctx = canvas.getContext('2d');
-        
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        // Dragon state
-        const dragon = {
-            x: -200,
-            y: 100,
-            speed: 2,
-            wingPhase: 0,
-            fireParticles: [],
-            trailParticles: []
-        };
+        // Dragon animation handler
+        let dragonX = -200;
+        let dragonY = 100;
+        let speed = 2.5;
+        let fireParticles = [];
 
-        class FireParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.vx = (Math.random() - 0.2) * 4;
-                this.vy = (Math.random() - 0.5) * 3;
-                this.life = 1;
-                this.decay = 0.01 + Math.random() * 0.02;
-                this.size = 5 + Math.random() * 15;
-                this.hue = 0 + Math.random() * 60; // Red to yellow
-            }
-            
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vy += 0.05; // Gravity
-                this.life -= this.decay;
-                this.size *= 0.98;
-            }
-            
-            draw(ctx) {
-                ctx.save();
-                ctx.globalAlpha = this.life;
-                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
-                gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, 0.8)`);
-                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        class TrailParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.life = 1;
-                this.decay = 0.02;
-                this.size = 2 + Math.random() * 3;
-            }
-            
-            update() {
-                this.life -= this.decay;
-                this.size *= 0.95;
-            }
-            
-            draw(ctx) {
-                ctx.save();
-                ctx.globalAlpha = this.life * 0.5;
-                ctx.fillStyle = 'rgba(0, 240, 255, 0.6)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function drawDragon(ctx, x, y, wingPhase) {
+        function drawDragon(x, y) {
             ctx.save();
             ctx.translate(x, y);
-            
-            // Body
-            ctx.fillStyle = '#1a1a2e';
-            ctx.strokeStyle = '#00f0ff';
+            ctx.scale(0.8, 0.8);
+
+            // Draw a stylized sleek black dragon shape flying
+            ctx.fillStyle = '#111827';
+            ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 2;
-            
-            // Main body shape
+
+            // Wings & Body outline simulation using canvas paths
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.bezierCurveTo(20, -10, 40, -5, 60, 0);
-            ctx.bezierCurveTo(80, 5, 100, 0, 120, -5);
-            ctx.bezierCurveTo(100, 10, 80, 15, 60, 10);
-            ctx.bezierCurveTo(40, 15, 20, 10, 0, 0);
+            ctx.lineTo(-40, -30);
+            ctx.lineTo(-80, -10);
+            ctx.lineTo(-50, 20);
+            ctx.lineTo(-20, 10);
+            ctx.closePath();
             ctx.fill();
             ctx.stroke();
-            
-            // Head
+
+            // Dragon Head & Horns
             ctx.beginPath();
-            ctx.moveTo(120, -5);
-            ctx.lineTo(140, -15);
-            ctx.lineTo(145, -5);
-            ctx.lineTo(140, 5);
-            ctx.lineTo(120, 10);
+            ctx.moveTo(30, -10);
+            ctx.quadraticCurveTo(50, -20, 60, -5);
+            ctx.quadraticCurveTo(40, 10, 20, 5);
+            ctx.closePath();
             ctx.fill();
             ctx.stroke();
-            
-            // Eye
-            ctx.fillStyle = '#ff00a0';
+
+            // Glowing Dragon Eye
+            ctx.fillStyle = '#ff0055';
             ctx.beginPath();
-            ctx.arc(135, -5, 3, 0, Math.PI * 2);
+            ctx.arc(45, -8, 2.5, 0, Math.PI * 2);
             ctx.fill();
-            
-            // Wing (animated)
-            const wingY = Math.sin(wingPhase) * 30;
-            ctx.beginPath();
-            ctx.moveTo(40, 0);
-            ctx.quadraticCurveTo(60, -40 + wingY, 80, -20 + wingY);
-            ctx.quadraticCurveTo(60, -10 + wingY * 0.5, 50, 0);
-            ctx.fillStyle = 'rgba(0, 240, 255, 0.1)';
-            ctx.fill();
-            ctx.stroke();
-            
-            // Tail
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.quadraticCurveTo(-30, -10, -50, 5);
-            ctx.quadraticCurveTo(-30, 10, 0, 5);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fill();
-            ctx.stroke();
-            
+
             ctx.restore();
         }
 
-        function animateDragon() {
+        function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Update dragon position
-            dragon.x += dragon.speed;
-            dragon.y = 100 + Math.sin(dragon.x * 0.005) * 50;
-            dragon.wingPhase += 0.15;
-            
-            // Reset when off screen
-            if (dragon.x > canvas.width + 200) {
-                dragon.x = -200;
-                dragon.fireParticles = [];
-            }
-            
-            // Spawn fire particles from dragon mouth
-            if (Math.random() > 0.3) {
-                dragon.fireParticles.push(new FireParticle(dragon.x + 145, dragon.y - 5));
-            }
-            
-            // Spawn trail particles
-            if (Math.random() > 0.5) {
-                dragon.trailParticles.push(new TrailParticle(dragon.x + 20, dragon.y + 5));
-            }
-            
-            // Update and draw trail
-            dragon.trailParticles = dragon.trailParticles.filter(p => p.life > 0);
-            dragon.trailParticles.forEach(p => {
-                p.update();
-                p.draw(ctx);
-            });
-            
-            // Draw dragon
-            drawDragon(ctx, dragon.x, dragon.y, dragon.wingPhase);
-            
-            // Update and draw fire
-            dragon.fireParticles = dragon.fireParticles.filter(p => p.life > 0);
-            dragon.fireParticles.forEach(p => {
-                p.update();
-                p.draw(ctx);
-            });
-            
-            requestAnimationFrame(animateDragon);
-        }
-        
-        animateDragon();
 
-        // 5. Scroll Reveal Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+            // Move dragon across screen
+            dragonX += speed;
+            if (dragonX > canvas.width + 250) {
+                dragonX = -250;
+                dragonY = Math.random() * (canvas.height * 0.4);
+            }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+            drawDragon(dragonX, dragonY);
+
+            // Fire breathing effect from dragon's mouth
+            if (dragonX > 100 && dragonX < canvas.width - 200) {
+                if (Math.random() < 0.6) {
+                    fireParticles.push({
+                        x: dragonX + 50,
+                        y: dragonY - 5,
+                        vx: (Math.random() * 4) + 3,
+                        vy: (Math.random() - 0.5) * 2,
+                        radius: Math.random() * 8 + 4,
+                        color: Math.random() > 0.5 ? '#ff3300' : '#ff9900',
+                        alpha: 1
+                    });
                 }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // 6. Parallax Effect on Mouse Move
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth - 0.5;
-            const mouseY = e.clientY / window.innerHeight - 0.5;
-            
-            document.querySelectorAll('.bg-glow').forEach((glow, index) => {
-                const speed = (index + 1) * 20;
-                glow.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px) scale(${1 + index * 0.1})`;
-            });
-        });
-
-        // 7. Download Counter Animation
-        const dlCounter = document.getElementById('downloadCount');
-        let dlCount = 0;
-        const dlTarget = 50;
-        
-        function animateDlCounter() {
-            dlCount += 0.5;
-            if (dlCount < dlTarget) {
-                dlCounter.textContent = Math.floor(dlCount) + 'K+';
-                requestAnimationFrame(animateDlCounter);
-            } else {
-                dlCounter.textContent = '50K+';
             }
+
+            // Update & draw fire particles
+            for (let i = fireParticles.length - 1; i >= 0; i--) {
+                let p = fireParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.03;
+
+                if (p.alpha <= 0) {
+                    fireParticles.splice(i, 1);
+                } else {
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            requestAnimationFrame(animate);
         }
-        setTimeout(animateDlCounter, 1000);
 
-        // 8. Dynamic RGB Border Effect for VIP Card
-        const vipCard = document.querySelector('.panel-card.vip');
-        let hue = 0;
-        
-        function animateVIPBorder() {
-            hue = (hue + 1) % 360;
-            vipCard.style.borderColor = `hsla(${hue}, 100%, 50%, 0.3)`;
-            vipCard.style.boxShadow = `0 0 30px hsla(${hue}, 100%, 50%, 0.1)`;
-            requestAnimationFrame(animateVIPBorder);
-        }
-        animateVIPBorder();
+        animate();
 
-        // 9. Button Click Effects
-        document.querySelectorAll('.btn, .btn-small, .tool-card').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: rgba(255,255,255,0.3);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s ease-out;
-                    pointer-events: none;
-                `;
-                
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-
-        // Add ripple keyframes dynamically
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes ripple {
-                to { transform: scale(2); opacity: 0; }
+        // Live player counter fluctuation
+        setInterval(() => {
+            let counter = document.getElementById('counter');
+            if(counter) {
+                let current = parseInt(counter.innerText.replace(',', ''));
+                let change = Math.floor(Math.random() * 11) - 5;
+                counter.innerText = (current + change).toLocaleString();
             }
-        `;        document.he
-ad.appendChild(style);
-
-        // 10. Ticker Speed Control based on visibility
-        document.addEventListener('visibilitychange', () => {
-            const ticker = document.querySelector('.ticker');
-            if (document.hidden) {
-                ticker.style.animationPlayState = 'paused';
-            } else {
-                ticker.style.animationPlayState = 'running';
-            }
-        });
-
-        console.log('%c KENZOHEX ', 'background: linear-gradient(90deg, #00f0ff, #ff00a0); color: #000; font-size: 24px; font-weight: bold; padding: 10px; border-radius: 8px;');
-        console.log('%c Free Fire Hub Initialized ', 'color: #00f0ff; font-size: 14px;');
+        }, 4000);
     </script>
 </body>
 </html>
