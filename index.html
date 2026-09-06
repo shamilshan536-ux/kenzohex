@@ -3,768 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KenzoHex | Free Fire Hub</title>
-    <meta name="description" content="KenzoHex - Ultimate Free Fire Hub. Panels, Tools, Downloads & Macros.">
+    <title>KenzoHex | Ultimate Free Fire Hub</title>
+    <meta name="description" content="KenzoHex - Free Fire Panels, Tools, Downloads, Macros & Sensitivity Hub.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #030811;
-            --bg-card: rgba(10, 15, 30, 0.85);
-            --neon-primary: #00f0ff;
-            --neon-secondary: #ff00a0;
-            --neon-tertiary: #39ff14;
-            --text-primary: #e0e6ed;
-            --text-secondary: #8b95a5;
-            --border-glow: rgba(0, 240, 255, 0.3);
-            --rgb-phase: 0deg;
+            --bg: #030811;
+            --surface: rgba(10, 16, 32, 0.7);
+            --neon-cyan: #00f0ff;
+            --neon-pink: #ff00a0;
+            --neon-lime: #39ff14;
+            --neon-purple: #b829dd;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            background: var(--bg-dark);
-            color: var(--text-primary);
+            background: var(--bg);
+            color: var(--text);
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* RGB Background Glow Animation */
-        @keyframes rgbShift {
-            0% { --rgb-phase: 0deg; filter: hue-rotate(0deg); }
-            100% { --rgb-phase: 360deg; filter: hue-rotate(360deg); }
-        }
-
-        .rgb-glow {
-            animation: rgbShift 8s linear infinite;
-        }
-
-        /* Background Particles */
-        .bg-glow {
+        /* ================= BACKGROUND FX ================= */
+        .ambient-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
+            filter: blur(140px);
+            opacity: 0.12;
             pointer-events: none;
             z-index: 0;
+            animation: floatOrb 20s ease-in-out infinite;
         }
+        .glow-1 { width: 600px; height: 600px; background: var(--neon-cyan); top: -10%; left: -10%; }
+        .glow-2 { width: 500px; height: 500px; background: var(--neon-pink); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .glow-3 { width: 400px; height: 400px; background: var(--neon-purple); top: 40%; left: 40%; animation-delay: -10s; }
 
-        .glow-1 { top: -200px; left: -200px; background: #00f0ff; animation: float 20s ease-in-out infinite; }
-        .glow-2 { bottom: -200px; right: -200px; background: #ff00a0; animation: float 25s ease-in-out infinite reverse; }
-        .glow-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: #39ff14; animation: float 22s ease-in-out infinite; }
-
-        @keyframes float {
+        @keyframes floatOrb {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+            33% { transform: translate(40px, -60px) scale(1.15); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
         }
 
-        /* Announcement Ticker */
+        /* ================= RGB UTILITIES ================= */
+        .rgb-text {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-lime), var(--neon-cyan));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rgbFlow 6s ease infinite;
+        }
+        .rgb-border {
+            position: relative;
+        }
+        .rgb-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-lime), var(--neon-cyan));
+            background-size: 400% 400%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rgbFlow 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rgbFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ================= TICKER ================= */
         .ticker-wrap {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, rgba(0,240,255,0.1), rgba(255,0,160,0.1), rgba(57,255,20,0.1));
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            top: 0; left: 0; width: 100%;
+            background: rgba(3, 8, 17, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
             z-index: 1000;
             overflow: hidden;
-            height: 36px;
+            height: 38px;
             display: flex;
             align-items: center;
         }
-
-        .ticker {
+        .ticker-track {
             display: inline-flex;
             white-space: nowrap;
-            animation: ticker 30s linear infinite;
+            animation: tickerScroll 35s linear infinite;
             padding-left: 100%;
         }
-
         .ticker-item {
             display: inline-flex;
             align-items: center;
-            margin-right: 60px;
+            margin-right: 80px;
             font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
         }
-
         .ticker-item::before {
-            content: "▶";
+            content: '▶';
             margin-right: 10px;
-            color: var(--neon-primary);
-            animation: pulse 1.5s ease-in-out infinite;
+            color: var(--neon-cyan);
+            animation: pulse 1.5s infinite;
         }
-
-        @keyframes ticker {
+        @keyframes tickerScroll {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        /* Social Header */
-        .social-header {
+        /* ================= SOCIAL HEADER ================= */
+        .social-bar {
             position: fixed;
-            top: 36px;
-            right: 20px;
+            top: 48px;
+            right: 24px;
             z-index: 999;
             display: flex;
             gap: 12px;
             background: rgba(3, 8, 17, 0.8);
             padding: 8px 16px;
             border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border);
             backdrop-filter: blur(10px);
         }
-
-        .social-icon {
-            width: 36px;
-            height: 36px;
+        .social-btn {
+            width: 36px; height: 36px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             text-decoration: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
-
-        .social-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            padding: 2px;
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.5;
-            transition: opacity 0.3s;
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
+        .social-btn svg { width: 18px; height: 18px; fill: var(--text); }
 
-        .social-icon:hover::before { opacity: 1; }
-        .social-icon:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 0 20px rgba(0,240,255,0.4); }
-
-        .social-icon svg { width: 18px; height: 18px; fill: white; }
-
-        /* Main Container */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            padding-top: 80px;
-        }
-
-        /* Hero Section */
+        /* ================= HERO ================= */
         .hero {
+            position: relative;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            position: relative;
-            padding: 2rem;
+            padding: 120px 2rem 4rem;
+            overflow: hidden;
+            z-index: 10;
         }
 
-        /* 3D Glowing Title */
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(3rem, 10vw, 7rem);
             font-weight: 900;
-            letter-spacing: 8px;
-            position: relative;
+            letter-spacing: 10px;
+            line-height: 1;
             margin-bottom: 1rem;
-            cursor: default;
-            user-select: none;
+            position: relative;
+            text-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
         }
-
         .hero-title .char {
             display: inline-block;
-            animation: rgbText 3s ease-in-out infinite;
-            text-shadow: 
-                0 0 10px currentColor,
-                0 0 20px currentColor,
-                0 0 40px currentColor,
-                0 0 80px currentColor;
+            animation: charRGB 3s ease-in-out infinite;
+        }
+        @keyframes charRGB {
+            0%, 100% { color: var(--neon-cyan); text-shadow: 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
+            33% { color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink), 0 0 60px var(--neon-pink); }
+            66% { color: var(--neon-lime); text-shadow: 0 0 30px var(--neon-lime), 0 0 60px var(--neon-lime); }
         }
 
-        @keyframes rgbText {
-            0%, 100% { color: #00f0ff; }
-            33% { color: #ff00a0; }
-            66% { color: #39ff14; }
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            letter-spacing: 4px;
+        .hero-sub {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            letter-spacing: 6px;
             text-transform: uppercase;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.5s both;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Server Status */
-        .server-status {
-            display: flex;
+        .server-pill {
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 12px 24px;
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            padding: 14px 28px;
             border-radius: 50px;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.7s both;
+            margin-bottom: 3rem;
             backdrop-filter: blur(10px);
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 0.95rem;
         }
-
         .status-dot {
-            width: 12px;
-            height: 12px;
-            background: #39ff14;
+            width: 10px; height: 10px;
+            background: var(--neon-lime);
             border-radius: 50%;
-            box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
-            animation: blink 2s ease-in-out infinite;
+            box-shadow: 0 0 12px var(--neon-lime);
+            animation: blink 2s infinite;
         }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .status-text { font-weight: 600; letter-spacing: 2px; }
-
-        .player-counter {
+        .player-count {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            color: var(--neon-primary);
-            text-shadow: 0 0 10px var(--neon-primary);
+            font-size: 1.6rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            min-width: 120px;
+            text-align: center;
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             max-width: 600px;
             width: 100%;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease-out 0.9s both;
         }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1.5rem;
+        .stat-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.8rem 1rem;
             text-align: center;
             backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
             position: relative;
             overflow: hidden;
         }
-
-        .stat-card::before {
+        .stat-box:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 240, 255, 0.08);
+        }
+        .stat-box::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: left 0.5s;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            transition: left 0.6s;
         }
-
-        .stat-card:hover::before { left: 100%; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--neon-primary); box-shadow: 0 10px 30px rgba(0,240,255,0.1); }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
+        .stat-box:hover::after { left: 100%; }
+        .stat-ico { font-size: 1.8rem; margin-bottom: 0.6rem; }
+        .stat-val {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--neon-primary);
+            color: var(--neon-cyan);
+            margin-bottom: 4px;
         }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
-        }
-
-        /* 3D Interactive Character */
-        .character-container {
-            position: fixed;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 280px;
-            height: 400px;
-            z-index: 50;
-            perspective: 1000px;
-            cursor: grab;
-            display: none;
-        }
-
-        @media (min-width: 1200px) {
-            .character-container { display: block; }
-        }
-
-        .character-container:active { cursor: grabbing; }
-
-        .character-scene {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-
-        .character-hint {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
+        .stat-lbl {
             font-size: 0.75rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            opacity: 0.7;
-            animation: fadeInOut 3s ease-in-out infinite;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
 
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* Character Parts (CSS 3D Composition) */
-        .char-part {
+        /* ================= ANIME GIRL (HERO ONLY) ================= */
+        .anime-girl-wrap {
             position: absolute;
-            transform-style: preserve-3d;
+            right: 2%;
+            bottom: 0;
+            width: clamp(220px, 28vw, 420px);
+            height: 85%;
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0.95;
+            filter: drop-shadow(0 0 40px rgba(0, 240, 255, 0.15));
         }
-
-        .char-head {
-            width: 80px;
-            height: 90px;
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-            border-radius: 20px 20px 30px 30px;
-            top: 20px;
-            left: 100px;
-            border: 2px solid #444;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 15px rgba(0,240,255,0.2);
-        }
-
-        .char-visor {
-            width: 60px;
-            height: 25px;
-            background: linear-gradient(90deg, #00f0ff, #0080ff);
-            border-radius: 10px;
-            top: 35px;
-            left: 10px;
-            box-shadow: 0 0 15px rgba(0,240,255,0.6);
-            animation: visorGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes visorGlow {
-            from { box-shadow: 0 0 15px rgba(0,240,255,0.6); }
-            to { box-shadow: 0 0 25px rgba(0,240,255,0.9), 0 0 40px rgba(0,240,255,0.4); }
-        }
-
-        .char-body {
-            width: 100px;
-            height: 120px;
-            background: linear-gradient(180deg, #333, #1a1a1a);
-            border-radius: 20px;
-            top: 110px;
-            left: 90px;
-            border: 2px solid #444;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-        }
-
-        .char-chest {
-            width: 60px;
-            height: 40px;
-            background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(255,0,160,0.2));
-            border-radius: 10px;
-            top: 20px;
-            left: 20px;
-            border: 1px solid rgba(0,240,255,0.3);
-        }
-
-        .char-arm-left, .char-arm-right {
-            width: 30px;
-            height: 90px;
-            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
-            border-radius: 15px;
-            top: 120px;
-            border: 2px solid #444;
-        }
-
-        .char-arm-left { left: 50px; transform: rotateZ(10deg); }
-        .char-arm-right { left: 200px; transform: rotateZ(-10deg); }
-
-        .char-leg-left, .char-leg-right {
-            width: 35px;
-            height: 100px;
-            background: linear-gradient(180deg, #2a2a2a, #0a0a0a);
-            border-radius: 15px;
-            top: 230px;
-            border: 2px solid #444;
-        }
-
-        .char-leg-left { left: 95px; }
-        .char-leg-right { left: 150px; }
-
-        .char-weapon {
-            width: 20px;
-            height: 80px;
-            background: linear-gradient(180deg, #444, #222);
-            border-radius: 5px;
-            top: 140px;
-            left: 220px;
-            transform: rotateZ(-30deg);
-            border: 1px solid #555;
-        }
-
-        .char-weapon::after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 15px;
-            background: #333;
-            top: -10px;
-            left: -10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-        }
-
-        /* Dragon Canvas */
-        #dragonCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .anime-girl-wrap svg {
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 2;
+            max-height: 700px;
+        }
+        @media (max-width: 1024px) {
+            .anime-girl-wrap { display: none; }
         }
 
-        /* Section Styling */
+        /* ================= SECTIONS ================= */
         section {
             position: relative;
             z-index: 10;
-            padding: 80px 2rem;
+            padding: 100px 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .section-title {
+        .sec-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
             position: relative;
             display: inline-block;
             left: 50%;
             transform: translateX(-50%);
-            padding: 0 2rem;
         }
-
-        .section-title::after {
+        .sec-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 70px;
             height: 3px;
-            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-lime));
+            background-size: 200% 100%;
+            animation: rgbFlow 3s linear infinite;
             border-radius: 3px;
-            animation: rgbShift 4s linear infinite;
         }
 
-        /* Panel Cards */
+        /* ================= PANELS ================= */
         .panels-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
         }
-
         .panel-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
             padding: 2.5rem;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
+            backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-style: preserve-3d;
         }
-
-        .panel-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 2px;
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary), var(--neon-tertiary));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s;
+        .panel-card:hover {
+            transform: translateY(-12px) rotateX(4deg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
-
-        .panel-card:hover::before { opacity: 1; }
-        .panel-card:hover { transform: translateY(-10px) rotateX(5deg); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-
         .panel-card.vip {
-            background: linear-gradient(135deg, rgba(255,0,160,0.1), rgba(100,0,200,0.1));
-            border-color: rgba(255,0,160,0.3);
+            background: linear-gradient(135deg, rgba(255,0,160,0.08), rgba(100,0,200,0.08));
         }
-
-        .panel-card.vip::before {
-            opacity: 1;
-            animation: rgbRotate 3s linear infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes rgbRotate {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
+        .panel-card.vip .rgb-border::before { opacity: 1; }
+        
         .panel-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 6px 16px;
+            top: 24px; right: 24px;
+            padding: 6px 18px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+        }
+        .badge-free { background: rgba(57,255,20,0.12); color: var(--neon-lime); border: 1px solid rgba(57,255,20,0.3); }
+        .badge-vip {
+            background: linear-gradient(90deg, rgba(255,0,160,0.2), rgba(0,240,255,0.2));
+            color: #fff;
+            border: 1px solid rgba(255,0,160,0.4);
+            animation: rgbFlow 3s linear infinite;
+            background-size: 300% 300%;
         }
 
-        .badge-free { background: rgba(57, 255, 20, 0.15); color: var(--neon-tertiary); border: 1px solid rgba(57, 255, 20, 0.3); }
-        .badge-vip { 
-            background: linear-gradient(90deg, rgba(255,0,160,0.2), rgba(0,240,255,0.2)); 
-            color: #fff; 
-            border: 1px solid rgba(255,0,160,0.5);
-            animation: rgbShift 3s linear infinite;
-        }
-
-        .panel-title {
+        .panel-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
             margin-top: 0.5rem;
         }
-
-        .panel-features {
-            list-style: none;
-            margin: 1.5rem 0;
+        .panel-desc {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
-
-        .panel-features li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        .feat-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        .feat-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 0.95rem;
         }
-
-        .panel-features li::before {
-            content: "✓";
-            color: var(--neon-tertiary);
-            font-weight: bold;
+        .feat-list li::before {
+            content: '✓';
+            color: var(--neon-lime);
+            font-weight: 900;
+            font-size: 1.1rem;
         }
-
-        .panel-features li.locked::before {
-            content: "🔒";
-            color: var(--neon-secondary);
-        }
-
-        .panel-features li.locked { color: var(--text-secondary); }
+        .feat-list li.locked::before { content: '🔒'; color: var(--neon-pink); font-size: 0.9rem; }
+        .feat-list li.locked { color: var(--text-dim); }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 14px 32px;
-            border-radius: 12px;
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-decoration: none;
             border: none;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            width: 100%;
         }
-
         .btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
             transition: left 0.5s;
         }
-
         .btn:hover::before { left: 100%; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--neon-primary), #0080ff);
+        .btn:hover { transform: translateY(-2px); }
+        .btn-cyan {
+            background: linear-gradient(135deg, var(--neon-cyan), #0080ff);
             color: #000;
+            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.25);
         }
-
         .btn-vip {
-            background: linear-gradient(135deg, var(--neon-secondary), #8000ff);
+            background: linear-gradient(135deg, var(--neon-pink), #7b2cbf);
             color: #fff;
-            animation: rgbShift 4s linear infinite;
+            box-shadow: 0 8px 25px rgba(255, 0, 160, 0.25);
         }
 
-        /* Downloads Section */
-        .download-grid {
+        /* ================= DOWNLOADS ================= */
+        .dl-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
         }
-
-        .download-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 2rem;
+        .dl-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.2rem;
             text-align: center;
             transition: all 0.4s ease;
             transform-style: preserve-3d;
             position: relative;
             overflow: hidden;
         }
-
-        .download-card:hover {
-            transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
-            border-color: var(--neon-primary);
-            box-shadow: 0 15px 35px rgba(0,240,255,0.15);
+        .dl-card:hover {
+            transform: translateY(-10px) rotateX(6deg) rotateY(6deg);
+            border-color: rgba(0, 240, 255, 0.35);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.12);
         }
-
-        .download-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 1rem;
-            background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,240,255,0.05));
-            border-radius: 20px;
+        .dl-icon {
+            width: 72px; height: 72px;
+            margin: 0 auto 1.2rem;
+            background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,240,255,0.03));
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            border: 1px solid rgba(0,240,255,0.2);
+            font-size: 2.2rem;
+            border: 1px solid rgba(0,240,255,0.15);
         }
+        .dl-name { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; margin-bottom: 6px; }
+        .dl-meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
 
-        .download-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .download-meta { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
-
-        /* App Player Hubs */
+        /* ================= APP PLAYERS ================= */
         .hubs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-
         .hub-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 2.2rem;
             transition: all 0.4s ease;
         }
-
-        .hub-card:hover { transform: translateY(-5px); border-color: var(--neon-primary); }
-
-        .hub-header {
+        .hub-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .hub-head {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
             margin-bottom: 1.5rem;
         }
-
-        .hub-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+        .hub-avatar {
+            width: 64px; height: 64px;
+            border-radius: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
             font-weight: 900;
             border: 2px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
         }
-
-        .msi-logo { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; }
-        .bs-logo { background: linear-gradient(135deg, #0066ff, #003d99); color: white; }
-
-        .hub-name { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; }
-        .hub-type { color: var(--text-secondary); font-size: 0.85rem; }
-
+        .hub-avatar.msi { background: linear-gradient(135deg, #ff2a2a, #c40000); color: #fff; }
+        .hub-avatar.bs { background: linear-gradient(135deg, #0066ff, #0044aa); color: #fff; }
+        .hub-title { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; }
+        .hub-sub { color: var(--text-dim); font-size: 0.85rem; }
+        .hub-desc {
+            color: var(--text-dim);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
         .hub-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-        .btn-small {
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+        .chip {
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 0.82rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
@@ -772,616 +555,702 @@
             align-items: center;
             gap: 6px;
         }
-
-        .btn-small:hover {
-            background: rgba(0,240,255,0.1);
-            border-color: var(--neon-primary);
+        .chip:hover {
+            background: rgba(0,240,255,0.08);
+            border-color: var(--neon-cyan);
             transform: translateY(-2px);
         }
 
-        /* Tools Section */
+        /* ================= TOOLS ================= */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 1.2rem;
         }
-
-        .tool-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1.5rem;
+        .tool-tile {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.8rem 1.2rem;
             text-align: center;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.35s ease;
         }
-
-        .tool-card:hover {
-            border-color: var(--neon-tertiary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(57,255,20,0.1);
+        .tool-tile:hover {
+            border-color: var(--neon-lime);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(57,255,20,0.08);
         }
+        .tool-ico { font-size: 2.4rem; margin-bottom: 0.8rem; display: block; }
+        .tool-name { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-size: 0.95rem; }
+        .tool-hint { font-size: 0.78rem; color: var(--text-dim); }
 
-        .tool-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .tool-name {
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tool-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Contact Section */
-        .contact-container {
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 3rem;
+        /* ================= CONTACT ================= */
+        .contact-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 3.5rem;
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        .contact-container::before {
+        .contact-box::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 60%);
+            animation: spin 25s linear infinite;
         }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .contact-content { position: relative; z-index: 1; }
-
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .contact-inner { position: relative; z-index: 1; }
         .contact-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
-
-        .contact-details {
+        .contact-sub { color: var(--text-dim); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .info-list {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            margin: 2rem 0;
+            margin-bottom: 2.5rem;
             align-items: center;
         }
-
-        .contact-item {
+        .info-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 24px;
+            gap: 14px;
+            padding: 14px 28px;
             background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
             font-size: 1.1rem;
             transition: all 0.3s;
+            min-width: 320px;
+            justify-content: center;
         }
-
-        .contact-item:hover {
-            border-color: var(--neon-primary);
-            background: rgba(0,240,255,0.05);
-            transform: translateX(5px);
+        .info-row:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0,240,255,0.04);
+            transform: translateX(6px);
         }
-
-        .contact-item span { color: var(--neon-primary); font-weight: 700; }
-
-        .whatsapp-btn {
+        .info-row span { color: var(--neon-cyan); font-weight: 700; }
+        .wa-btn {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 40px;
+            padding: 18px 44px;
             background: linear-gradient(135deg, #25d366, #128c7e);
-            color: white;
+            color: #fff;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
-            margin-top: 1rem;
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-
-        .whatsapp-btn:hover {
+        .wa-btn:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
+            box-shadow: 0 18px 45px rgba(37, 211, 102, 0.45);
         }
 
-        /* Footer */
+        /* ================= FOOTER ================= */
         footer {
             text-align: center;
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-secondary);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-dim);
             font-size: 0.9rem;
             position: relative;
             z-index: 10;
         }
-
-        .footer-brand {
+        .foot-brand {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            animation: rgbShift 6s linear infinite;
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            animation: rgbFlow 8s linear infinite;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-lime), var(--neon-cyan));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--neon-primary), var(--neon-secondary)); border-radius: 4px; }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .social-header { top: 36px; right: 10px; padding: 6px 12px; gap: 8px; }
-            .social-icon { width: 30px; height: 30px; }
-            .hero { padding: 1rem; }
-            section { padding: 60px 1rem; }
-            .contact-container { padding: 2rem 1.5rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        /* ================= DRAGON CANVAS ================= */
+        #dragonLayer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
         }
 
-        /* Loading Animation */
-        .fade-in {
+        /* ================= SCROLL REVEAL ================= */
+        .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.5, 0, 0, 1);
         }
-
-        .fade-in.visible {
+        .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Neon Border Animation */
-        @keyframes neonPulse {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary); }
-            50% { box-shadow: 0 0 20px var(--neon-primary), 0 0 40px var(--neon-primary); }
+        /* ================= RIPPLE FX ================= */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            transform: scale(0);
+            animation: rippleAnim 0.7s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .social-bar { top: 44px; right: 10px; padding: 6px 12px; gap: 8px; }
+            .stats-row { grid-template-columns: 1fr; max-width: 280px; }
+            .hero { padding: 100px 1rem 3rem; }
+            section { padding: 70px 1rem; }
+            .contact-box { padding: 2.5rem 1.5rem; }
+            .info-row { min-width: unset; width: 100%; font-size: 1rem; }
+            .panels-grid, .dl-grid, .hubs-grid { grid-template-columns: 1fr; }
         }
 
-        .neon-pulse {
-            animation: neonPulse 2s ease-in-out infinite;
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-cyan), var(--neon-pink));
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Glows -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
-    <div class="bg-glow glow-3"></div>
+    <!-- Ambient Background -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
-    <!-- Dragon Canvas -->
-    <canvas id="dragonCanvas"></canvas>
+    <!-- Dragon Canvas Layer -->
+    <canvas id="dragonLayer"></canvas>
 
     <!-- Announcement Ticker -->
     <div class="ticker-wrap">
-        <div class="ticker">
-            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available</div>
-            <div class="ticker-item">VIP Panel Updated with Auto-Headshot v3.2</div>
-            <div class="ticker-item">Free Fire Max 2.104.1 Global APK Released</div>
-            <div class="ticker-item">Anti-Ban System Status: OPERATIONAL</div>
-            <div class="ticker-item">MSI App Player 5.14 Configs Added</div>
-            <div class="ticker-item">24/7 Support via WhatsApp Active</div>
-            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available</div>
-            <div class="ticker-item">VIP Panel Updated with Auto-Headshot v3.2</div>
-            <div class="ticker-item">Free Fire Max 2.104.1 Global APK Released</div>
-            <div class="ticker-item">Anti-Ban System Status: OPERATIONAL</div>
+        <div class="ticker-track">
+            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available Now</div>
+            <div class="ticker-item">VIP Panel v3.2 Released with Enhanced Anti-Ban</div>
+            <div class="ticker-item">Free Fire Max 2.104.1 Global APK + OBB Added</div>
+            <div class="ticker-item">MSI App Player 5.14 Optimized Configs Uploaded</div>
+            <div class="ticker-item">24/7 WhatsApp Support Active — Reach Anytime</div>
+            <div class="ticker-item">BlueStacks 10 Exclusive Macro Pack Released</div>
+            <div class="ticker-item">OB46 Patch Live — New Character 'Ryden' Available Now</div>
+            <div class="ticker-item">VIP Panel v3.2 Released with Enhanced Anti-Ban</div>
+            <div class="ticker-item">Free Fire Max 2.104.1 Global APK + OBB Added</div>
+            <div class="ticker-item">MSI App Player 5.14 Optimized Configs Uploaded</div>
         </div>
     </div>
 
-    <!-- Social Media Header -->
-    <div class="social-header">
-        <a href="https://wa.me/94761487975" class="social-icon" title="WhatsApp" target="_blank">
+    <!-- Social Floating Bar -->
+    <div class="social-bar">
+        <a href="https://wa.me/94761487975" class="social-btn" title="WhatsApp" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         </a>
-        <a href="#" class="social-icon" title="TikTok" target="_blank">
+        <a href="#" class="social-btn" title="TikTok" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.88-2.89 2.89 2.89 0 012.88-2.89c.2 0 .39.03.58.07V9.51a6.27 6.27 0 00-1-.05A6.33 6.33 0 005 15.83a6.33 6.33 0 006.33 6.33 6.33 6.33 0 006.33-6.33V9.01a8.16 8.16 0 004.8 1.55V7.1a4.79 4.79 0 01-2.87-.41z"/></svg>
         </a>
-        <a href="#" class="social-icon" title="Facebook" target="_blank">
+        <a href="#" class="social-btn" title="Facebook" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </a>
     </div>
 
-    <!-- 3D Interactive Character -->
-    <div class="character-container" id="characterContainer">
-        <div class="character-scene" id="characterScene">
-            <div class="char-part char-head">
-                <div class="char-visor"></div>
-            </div>
-            <div class="char-part char-body">
-                <div class="char-chest"></div>
-            </div>
-            <div class="char-part char-arm-left"></div>
-            <div class="char-part char-arm-right"></div>
-            <div class="char-part char-leg-left"></div>
-            <div class="char-part char-leg-right"></div>
-            <div class="char-part char-weapon"></div>
-        </div>
-        <div class="character-hint">Drag to Rotate • Scroll to Zoom</div>
-    </div>
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero">
+        
+        <!-- Anime Girl (Hero-Only, Absolute Positioned, Scrolls Away) -->
+        <div class="anime-girl-wrap">
+            <svg viewBox="0 0 400 650" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+                <defs>
+                    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1a0b2e;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#2d1b4e;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#0f0518;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="hairHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:0.6" />
+                        <stop offset="100%" style="stop-color:#b829dd;stop-opacity:0.2" />
+                    </linearGradient>
+                    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffe4d6;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#f5cbb6;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#0080ff;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="jacketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0a0e27;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#050814;stop-opacity:1" />
+                    </linearGradient>
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
 
-    <div class="main-container">
+                <!-- Back Hair -->
+                <path d="M120 120 Q80 200 70 350 Q65 450 90 550 L110 580 L130 540 Q140 400 150 300 Q160 200 140 130 Z" fill="url(#hairGrad)" />
+                <path d="M280 120 Q320 200 330 350 Q335 450 310 550 L290 580 L270 540 Q260 400 250 300 Q240 200 260 130 Z" fill="url(#hairGrad)" />
+                <path d="M100 150 Q60 250 50 400 Q45 500 80 600 L100 620 L120 580 Q110 450 130 300 Q140 200 120 150 Z" fill="#0f0518" opacity="0.6"/>
+                <path d="M300 150 Q340 250 350 400 Q355 500 320 600 L300 620 L280 580 Q290 450 270 300 Q260 200 280 150 Z" fill="#0f0518" opacity="0.6"/>
 
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1 class="hero-title" id="heroTitle">KENZOHEX</h1>
-            <p class="hero-subtitle">Ultimate Free Fire Command Center</p>
-            
-            <div class="server-status">
-                <div class="status-dot"></div>
-                <span class="status-text">SERVER ONLINE</span>
-                <span style="color: var(--text-secondary);">|</span>
-                <span class="player-counter" id="playerCounter">142,893</span>
-                <span style="color: var(--text-secondary); font-size: 0.85rem;">Active Players</span>
-            </div>
+                <!-- Body / Jacket -->
+                <path d="M140 280 Q120 320 110 400 L100 500 L110 650 L290 650 L300 500 L290 400 Q280 320 260 280 Z" fill="url(#jacketGrad)" stroke="#1a1f3a" stroke-width="2"/>
+                <path d="M140 280 L130 400 L120 500 L140 650" fill="none" stroke="#00f0ff" stroke-width="1.5" opacity="0.4" filter="url(#glow)"/>
+                <path d="M260 280 L270 400 L280 500 L260 650" fill="none" stroke="#00f0ff" stroke-width="1.5" opacity="0.4" filter="url(#glow)"/>
+                
+                <!-- Neck -->
+                <path d="M170 240 L170 290 Q200 300 230 290 L230 240 Z" fill="url(#skinGrad)"/>
+                <path d="M170 260 Q200 270 230 260" fill="none" stroke="#e0b096" stroke-width="1.5" opacity="0.5"/>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">⬇️</div>
-                    <div class="stat-value" id="downloadCount">50K+</div>
-                    <div class="stat-label">Downloads</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-value">99.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🛡️</div>
-                    <div class="stat-value">SAFE</div>
-                    <div class="stat-label">Anti-Ban</div>
-                </div>
-            </div>
-        </section>
+                <!-- Head -->
+                <ellipse cx="200" cy="180" rx="75" ry="85" fill="url(#skinGrad)"/>
+                
+                <!-- Face Details -->
+                <path d="M185 220 Q200 225 215 220" fill="none" stroke="#c4956a" stroke-width="2" stroke-linecap="round"/>
+                <path d="M200 235 L198 240 L202 240 Z" fill="#d4a082"/>
+                <path d="M195 245 Q200 248 205 245" fill="none" stroke="#c4956a" stroke-width="1.5" stroke-linecap="round"/>
 
-        <!-- Panel Selection -->
-        <section id="panels">
-            <h2 class="section-title fade-in">Choose Your Panel</h2>
-            <div class="panels-grid">
-                <div class="panel-card fade-in">
-                    <div class="panel-badge badge-free">Free</div>
-                    <h3 class="panel-title" style="color: var(--neon-tertiary);">Free Panel</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Standard tweaks for casual players. Get started with essential optimizations.</p>
-                    <ul class="panel-features">
-                        <li>Basic Sensitivity Configs</li>
-                        <li>Standard DPI Settings</li>
-                        <li>Community Macros</li>
-                        <li>Regular Updates</li>
-                        <li class="locked">Auto-Headshot</li>
-                        <li class="locked">VIP Support</li>
-                    </ul>
-                    <button class="btn btn-primary" onclick="alert('Free Panel download starting...')">
-                        <span>⬇️</span> Download Free Panel
-                    </button>
-                </div>
-
-                <div class="panel-card vip fade-in">
-                    <div class="panel-badge badge-vip">VIP</div>
-                    <h3 class="panel-title" style="color: var(--neon-secondary);">VIP Panel</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Advanced features for competitive players. Dominate every match.</p>
-                    <ul class="panel-features">
-                        <li>Auto-Headshot v3.2</li>
-                        <li>Custom DPI + Sensitivity</li>
-                        <li>Premium Macro Library</li>
-                        <li>Priority Updates</li>
-                        <li>Anti-Ban Protection</li>
-                        <li>24/7 Direct Support</li>
-                    </ul>
-                    <button class="btn btn-vip" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
-                        <span>👑</span> Contact for VIP
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Downloads Section -->
-        <section id="downloads">
-            <h2 class="section-title fade-in">Downloads</h2>
-            <div class="download-grid">
-                <div class="download-card fade-in">
-                    <div class="download-icon">📱</div>
-                    <h3 class="download-title">Free Fire APK</h3>
-                    <p class="download-meta">v2.104.1 • Global • 180MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading Free Fire APK...')">
-                        <span>⬇️</span> Download APK
-                    </button>
-                </div>
-                <div class="download-card fade-in">
-                    <div class="download-icon">📦</div>
-                    <h3 class="download-title">Free Fire OBB</h3>
-                    <p class="download-meta">v2.104.1 • Global • 850MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading Free Fire OBB...')">
-                        <span>⬇️</span> Download OBB
-                    </button>
-                </div>
-                <div class="download-card fade-in">
-                    <div class="download-icon">🚀</div>
-                    <h3 class="download-title">FF Max APK</h3>
-                    <p class="download-meta">v2.104.1 • Max • 195MB</p>
-                    <button class="btn btn-primary" onclick="alert('Downloading FF Max...')">
-                        <span>⬇️</span> Download Max
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- App Players Section -->
-        <section id="players">
-            <h2 class="section-title fade-in">App Player Hubs</h2>
-            <div class="hubs-grid">
-                <div class="hub-card fade-in">
-                    <div class="hub-header">
-                        <div class="hub-logo msi-logo">MSI</div>
-                        <div>
-                            <div class="hub-name">MSI App Player</div>
-                            <div class="hub-type">Optimized Gaming Hub</div>
-                        </div>
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-                        Pre-configured MSI App Player with custom keymaps, sensitivity presets, and performance tweaks for Free Fire.
-                    </p>
-                    <div class="hub-actions">
-                        <a href="#" class="btn-small" onclick="alert('Opening MSI Configs...')">⚙️ Configs</a>
-                        <a href="#" class="btn-small" onclick="alert('Downloading Keymap...')">🎮 Keymap</a>
-                        <a href="#" class="btn-small" onclick="alert('Opening Macro Folder...')">📁 Macros</a>
-                    </div>
-                </div>
-
-                <div class="hub-card fade-in">
-                    <div class="hub-header">
-                        <div class="hub-logo bs-logo">BS</div>
-                        <div>
-                            <div class="hub-name">BlueStacks</div>
-                            <div class="hub-type">Advanced Emulator Hub</div>
-                        </div>
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
-                        BlueStacks 5/10 optimized profiles with FPS unlock, smart controls, and exclusive sensitivity configurations.
-                    </p>
-                    <div class="hub-actions">
-                        <a href="#" class="btn-small" onclick="alert('Opening BS Configs...')">⚙️ Configs</a>
-                        <a href="#" class="btn-small" onclick="alert('Downloading Profile...')">👤 Profile</a>
-                        <a href="#" class="btn-small" onclick="alert('Opening Tools...')">🔧 Tools</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tools Section -->
-        <section id="tools">
-            <h2 class="section-title fade-in">Tools & Extras</h2>
-            <div class="tools-grid">
-                <div class="tool-card fade-in" onclick="alert('Macro Tool coming soon!')">
-                    <span class="tool-icon">🎯</span>
-                    <div class="tool-name">Macro Engine</div>
-                    <div class="tool-desc">Auto-tap & recoil control</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Sensitivity Calculator opening...')">
-                    <span class="tool-icon">📊</span>
-                    <div class="tool-name">Sens Finder</div>
-                    <div class="tool-desc">Calculate perfect sensitivity</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('DPI Converter loading...')">
-                    <span class="tool-icon">🔍</span>
-                    <div class="tool-name">DPI Tool</div>
-                    <div class="tool-desc">Cross-device DPI converter</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('GFX Tool launching...')">
-                    <span class="tool-icon">🎨</span>
-                    <div class="tool-name">GFX Unlocker</div>
-                    <div class="tool-desc">Max graphics & FPS unlock</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Resolution Fixer opening...')">
-                    <span class="tool-icon">📐</span>
-                    <div class="tool-name">Res Fixer</div>
-                    <div class="tool-desc">Custom resolution settings</div>
-                </div>
-                <div class="tool-card fade-in" onclick="alert('Ping Optimizer starting...')">
-                    <span class="tool-icon">📡</span>
-                    <div class="tool-name">Ping Fix</div>
-                    <div class="tool-desc">Network latency optimizer</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact">
-            <h2 class="section-title fade-in">Get In Touch</h2>
-            <div class="contact-container fade-in">
-                <div class="contact-content">
-                    <h3 class="contact-title">Contact KenzoHex</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Need VIP access or have questions? Reach out directly. We typically respond within minutes.
-                    </p>
+                <!-- Eyes -->
+                <g transform="translate(0, 5)">
+                    <!-- Left Eye -->
+                    <path d="M155 185 Q170 175 185 185 Q185 195 170 198 Q155 195 155 185 Z" fill="#fff"/>
+                    <ellipse cx="170" cy="188" rx="11" ry="14" fill="url(#eyeGrad)"/>
+                    <circle cx="172" cy="184" r="4" fill="#fff"/>
+                    <circle cx="168" cy="192" r="2" fill="#fff" opacity="0.6"/>
+                    <path d="M150 180 Q170 170 190 180" fill="none" stroke="#1a0b2e" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M152 182 Q170 172 188 182" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.6"/>
                     
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <span>📱</span>
-                            <span>076 14 87 975</span>
-                        </div>
-                        <div class="contact-item">
-                            <span>✉️</span>
-                            <span>shamilshan536@gmail.com</span>
-                        </div>
-                        <div class="contact-item">
-                            <span>⏰</span>
-                            <span>Available 24/7</span>
-                        </div>
-                    </div>
+                    <!-- Right Eye -->
+                    <path d="M215 185 Q230 175 245 185 Q245 195 230 198 Q215 195 215 185 Z" fill="#fff"/>
+                    <ellipse cx="230" cy="188" rx="11" ry="14" fill="url(#eyeGrad)"/>
+                    <circle cx="232" cy="184" r="4" fill="#fff"/>
+                    <circle cx="228" cy="192" r="2" fill="#fff" opacity="0.6"/>
+                    <path d="M210 180 Q230 170 250 180" fill="none" stroke="#1a0b2e" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M212 182 Q230 172 248 182" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.6"/>
+                </g>
 
-                    <a href="https://wa.me/94761487975?text=Hi%20KenzoHex!%20I'm%20interested%20in%20your%20VIP%20Panel." 
-                       class="whatsapp-btn" 
-                       target="_blank">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="margin-right: 8px;">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        Chat on WhatsApp
-                    </a>
+                <!-- Blush -->
+                <ellipse cx="160" cy="215" rx="12" ry="7" fill="#ff6b9d" opacity="0.25" filter="url(#glow)"/>
+                <ellipse cx="240" cy="215" rx="12" ry="7" fill="#ff6b9d" opacity="0.25" filter="url(#glow)"/>
+
+                <!-- Front Hair / Bangs -->
+                <path d="M130 140 Q140 200 135 250 Q145 220 155 180 Q160 230 165 260 Q175 210 185 170 Q195 220 200 260 Q210 210 220 170 Q230 220 240 260 Q245 210 250 170 Q260 220 270 250 Q265 200 275 140 Q250 100 200 95 Q150 100 130 140 Z" fill="url(#hairGrad)"/>
+                <path d="M140 130 Q150 180 145 220" fill="none" stroke="url(#hairHighlight)" stroke-width="2" opacity="0.7"/>
+                <path d="M260 130 Q250 180 255 220" fill="none" stroke="url(#hairHighlight)" stroke-width="2" opacity="0.7"/>
+                <path d="M180 110 Q185 160 182 200" fill="none" stroke="url(#hairHighlight)" stroke-width="1.5" opacity="0.5"/>
+
+                <!-- Headset -->
+                <path d="M120 160 Q110 200 115 240" fill="none" stroke="#1a1a2e" stroke-width="8" stroke-linecap="round"/>
+                <path d="M280 160 Q290 200 285 240" fill="none" stroke="#1a1a2e" stroke-width="8" stroke-linecap="round"/>
+                <rect x="108" y="225" width="16" height="30" rx="8" fill="#0f0f23" stroke="#00f0ff" stroke-width="1" filter="url(#glow)"/>
+                <rect x="276" y="225" width="16" height="30" rx="8" fill="#0f0f23" stroke="#00f0ff" stroke-width="1" filter="url(#glow)"/>
+                <path d="M125 180 Q200 60 275 180" fill="none" stroke="#1a1a2e" stroke-width="6"/>
+                <circle cx="200" cy="85" r="12" fill="#0f0f23" stroke="#ff00a0" stroke-width="1.5" filter="url(#glow)"/>
+                <circle cx="200" cy="85" r="5" fill="#ff00a0" opacity="0.8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+                </circle>
+
+                <!-- Tactical Collar / Choker -->
+                <path d="M175 275 Q200 285 225 275" fill="none" stroke="#ff00a0" stroke-width="3" filter="url(#glow)"/>
+                <circle cx="200" cy="280" r="4" fill="#00f0ff" filter="url(#glow)"/>
+
+                <!-- Shoulder Pads -->
+                <ellipse cx="125" cy="310" rx="25" ry="20" fill="#0d1229" stroke="#00f0ff" stroke-width="1" opacity="0.8"/>
+                <ellipse cx="275" cy="310" rx="25" ry="20" fill="#0d1229" stroke="#00f0ff" stroke-width="1" opacity="0.8"/>
+
+                <!-- Glowing Accents -->
+                <path d="M150 350 L160 450 L155 550" fill="none" stroke="#b829dd" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
+                <path d="M250 350 L240 450 L245 550" fill="none" stroke="#b829dd" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
+            </svg>
+        </div>
+
+        <h1 class="hero-title" id="heroTitle">KENZOHEX</h1>
+        <p class="hero-sub">Ultimate Free Fire Command Center</p>
+
+        <div class="server-pill">
+            <div class="status-dot"></div>
+            <span>SERVER ONLINE</span>
+            <span style="color: var(--text-dim);">|</span>
+            <span class="player-count" id="liveCounter">0</span>
+            <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 500;">Active Players</span>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box reveal">
+                <div class="stat-ico">⬇️</div>
+                <div class="stat-val" id="dlStat">0</div>
+                <div class="stat-lbl">Downloads</div>
+            </div>
+            <div class="stat-box reveal">
+                <div class="stat-ico">⚡</div>
+                <div class="stat-val">99.9%</div>
+                <div class="stat-lbl">Uptime</div>
+            </div>
+            <div class="stat-box reveal">
+                <div class="stat-ico">🛡️</div>
+                <div class="stat-val">SAFE</div>
+                <div class="stat-lbl">Anti-Ban</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PANELS ================= -->
+    <section id="panels">
+        <h2 class="sec-title reveal">Choose Your Panel</h2>
+        <div class="panels-grid">
+            <div class="panel-card reveal">
+                <div class="panel-badge badge-free">Free</div>
+                <h3 class="panel-name" style="color: var(--neon-lime);">Free Panel</h3>
+                <p class="panel-desc">Standard tweaks and optimizations for casual players. Essential tools to get started without any cost.</p>
+                <ul class="feat-list">
+                    <li>Basic Sensitivity Presets</li>
+                    <li>Standard DPI Settings</li>
+                    <li>Community Macro Pack</li>
+                    <li>Regular Patch Updates</li>
+                    <li class="locked">Auto-Headshot Engine</li>
+                    <li class="locked">Priority Support</li>
+                </ul>
+                <button class="btn btn-cyan" onclick="simulateAction('Free Panel Download Started')">
+                    <span>⬇️</span> Download Free Panel
+                </button>
+            </div>
+
+            <div class="panel-card vip rgb-border reveal">
+                <div class="panel-badge badge-vip">VIP</div>
+                <h3 class="panel-name" style="color: var(--neon-pink);">VIP Panel</h3>
+                <p class="panel-desc">Advanced arsenal for competitive players. Unlock the full power of KenzoHex with premium features.</p>
+                <ul class="feat-list">
+                    <li>Auto-Headshot v3.2 Pro</li>
+                    <li>Custom DPI + Sensitivity Suite</li>
+                    <li>Premium Macro Library (50+)</li>
+                    <li>Priority Patch Updates</li>
+                    <li>Advanced Anti-Ban Shield</li>
+                    <li>24/7 Direct WhatsApp Support</li>
+                </ul>
+                <button class="btn btn-vip" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                    <span>👑</span> Contact for VIP Access
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= DOWNLOADS ================= -->
+    <section id="downloads">
+        <h2 class="sec-title reveal">Downloads</h2>
+        <div class="dl-grid">
+            <div class="dl-card reveal">
+                <div class="dl-icon">📱</div>
+                <h3 class="dl-name">Free Fire APK</h3>
+                <p class="dl-meta">v2.104.1 • Global • 180 MB</p>
+                <button class="btn btn-cyan" onclick="simulateAction('Downloading Free Fire APK...')">
+                    <span>⬇️</span> Download APK
+                </button>
+            </div>
+            <div class="dl-card reveal">
+                <div class="dl-icon">📦</div>
+                <h3 class="dl-name">Free Fire OBB</h3>
+                <p class="dl-meta">v2.104.1 • Global • 850 MB</p>
+                <button class="btn btn-cyan" onclick="simulateAction('Downloading Free Fire OBB...')">
+                    <span>⬇️</span> Download OBB
+                </button>
+            </div>
+            <div class="dl-card reveal">
+                <div class="dl-icon">🚀</div>
+                <h3 class="dl-name">FF Max APK</h3>
+                <p class="dl-meta">v2.104.1 • Max • 195 MB</p>
+                <button class="btn btn-cyan" onclick="simulateAction('Downloading FF Max...')">
+                    <span>⬇️</span> Download Max
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= APP PLAYERS ================= -->
+    <section id="players">
+        <h2 class="sec-title reveal">App Player Hubs</h2>
+        <div class="hubs-grid">
+            <div class="hub-card reveal">
+                <div class="hub-head">
+                    <div class="hub-avatar msi">MSI</div>
+                    <div>
+                        <div class="hub-title">MSI App Player</div>
+                        <div class="hub-sub">Optimized Gaming Hub</div>
+                    </div>
+                </div>
+                <p class="hub-desc">Pre-tuned MSI App Player instance with custom Free Fire keymaps, sensitivity presets, and performance tweaks for low-end PCs.</p>
+                <div class="hub-actions">
+                    <button class="chip" onclick="simulateAction('Opening MSI Configs...')">⚙️ Configs</button>
+                    <button class="chip" onclick="simulateAction('Downloading Keymap...')">🎮 Keymap</button>
+                    <button class="chip" onclick="simulateAction('Opening Macro Folder...')">📁 Macros</button>
                 </div>
             </div>
-        </section>
 
-        <!-- Footer -->
-        <footer>
-            <div class="footer-brand">KENZOHEX</div>
-            <p>Free Fire Hub &copy; 2024. All rights reserved.</p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Not affiliated with Garena. Use at your own risk.</p>
-        </footer>
+            <div class="hub-card reveal">
+                <div class="hub-head">
+                    <div class="hub-avatar bs">BS</div>
+                    <div>
+                        <div class="hub-title">BlueStacks</div>
+                        <div class="hub-sub">Advanced Emulator Hub</div>
+                    </div>
+                </div>
+                <p class="hub-desc">BlueStacks 5 & 10 optimized profiles featuring FPS unlock, smart controls, and exclusive sensitivity configurations for ranked push.</p>
+                <div class="hub-actions">
+                    <button class="chip" onclick="simulateAction('Opening BS Configs...')">⚙️ Configs</button>
+                    <button class="chip" onclick="simulateAction('Downloading Profile...')">👤 Profile</button>
+                    <button class="chip" onclick="simulateAction('Opening BS Tools...')">🔧 Tools</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    </div>
+    <!-- ================= TOOLS ================= -->
+    <section id="tools">
+        <h2 class="sec-title reveal">Tools & Extras</h2>
+        <div class="tools-grid">
+            <div class="tool-tile reveal" onclick="simulateAction('Macro Engine launching...')">
+                <span class="tool-ico">🎯</span>
+                <div class="tool-name">Macro Engine</div>
+                <div class="tool-hint">Auto-tap & recoil control</div>
+            </div>
+            <div class="tool-tile reveal" onclick="simulateAction('Sensitivity Calculator opening...')">
+                <span class="tool-ico">📊</span>
+                <div class="tool-name">Sens Finder</div>
+                <div class="tool-hint">Calculate perfect sensitivity</div>
+            </div>
+            <div class="tool-tile reveal" onclick="simulateAction('DPI Converter loading...')">
+                <span class="tool-ico">🔍</span>
+                <div class="tool-name">DPI Tool</div>
+                <div class="tool-hint">Cross-device DPI converter</div>
+            </div>
+            <div class="tool-tile reveal" onclick="simulateAction('GFX Tool launching...')">
+                <span class="tool-ico">🎨</span>
+                <div class="tool-name">GFX Unlocker</div>
+                <div class="tool-hint">Max graphics & FPS unlock</div>
+            </div>
+            <div class="tool-tile reveal" onclick="simulateAction('Resolution Fixer opening...')">
+                <span class="tool-ico">📐</span>
+                <div class="tool-name">Res Fixer</div>
+                <div class="tool-hint">Custom resolution settings</div>
+            </div>
+            <div class="tool-tile reveal" onclick="simulateAction('Ping Optimizer starting...')">
+                <span class="tool-ico">📡</span>
+                <div class="tool-name">Ping Fix</div>
+                <div class="tool-hint">Network latency optimizer</div>
+            </div>
+        </div>
+    </section>
 
+    <!-- ================= CONTACT ================= -->
+    <section id="contact">
+        <h2 class="sec-title reveal">Get In Touch</h2>
+        <div class="contact-box reveal">
+            <div class="contact-inner">
+                <h3 class="contact-title">Contact KenzoHex</h3>
+                <p class="contact-sub">Need VIP access or have questions? We typically respond within minutes.</p>
+                
+                <div class="info-list">
+                    <div class="info-row">
+                        <span>📱</span>
+                        <span>076 14 87 975</span>
+                    </div>
+                    <div class="info-row">
+                        <span>✉️</span>
+                        <span>shamilshan536@gmail.com</span>
+                    </div>
+                    <div class="info-row">
+                        <span>⏰</span>
+                        <span>Available 24 / 7</span>
+                    </div>
+                </div>
+
+                <a href="https://wa.me/94761487975?text=Hi%20KenzoHex!%20I%20am%20interested%20in%20your%20VIP%20Panel%20and%20services." 
+                   class="wa-btn" target="_blank" rel="noopener">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        <div class="foot-brand">KENZOHEX</div>
+        <p>Free Fire Hub &copy; 2024. All rights reserved.</p>
+        <p style="margin-top: 6px; font-size: 0.8rem; opacity: 0.7;">Not affiliated with Garena. Use modifications at your own risk.</p>
+    </footer>
+
+    <!-- ================= JAVASCRIPT ================= -->
     <script>
-        // ==========================================
-        // KENZOHEX - FREE FIRE HUB
-        // Complete Interactive Logic
-        // ==========================================
+        // Utility: Nice alert replacement
+        function simulateAction(msg) {
+            const existing = document.querySelector('.toast-msg');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%) translateY(20px);
+                background: rgba(10,16,32,0.95);
+                border: 1px solid rgba(0,240,255,0.3);
+                color: var(--neon-cyan);
+                padding: 14px 28px;
+                border-radius: 12px;
+                font-family: 'Rajdhani', sans-serif;
+                font-weight: 700;
+                font-size: 1rem;
+                z-index: 10000;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                opacity: 0;
+                transition: all 0.4s ease;
+                white-space: nowrap;
+            `;
+            document.body.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            });
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
+        }
 
-        // 1. RGB Title Animation - Individual Character Coloring
-        const title = document.getElementById('heroTitle');
-        const text = title.textContent;
-        title.innerHTML = '';
-        text.split('').forEach((char, i) => {
+        // 1. Hero Title RGB Character Animation
+        const titleEl = document.getElementById('heroTitle');
+        const titleText = titleEl.textContent;
+        titleEl.innerHTML = '';
+        titleText.split('').forEach((char, i) => {
             const span = document.createElement('span');
             span.className = 'char';
             span.textContent = char;
-            span.style.animationDelay = `${i * 0.15}s`;
-            title.appendChild(span);
+            span.style.animationDelay = `${i * 0.12}s`;
+            titleEl.appendChild(span);
         });
 
-        // 2. Live Player Counter Animation
-        const counter = document.getElementById('playerCounter');
-        let basePlayers = 142000;
-        
-        function updateCounter() {
-            const variation = Math.floor(Math.random() * 2000) - 1000;
-            const current = basePlayers + variation;
-            counter.textContent = current.toLocaleString();
-        }
-        
-        setInterval(updateCounter, 3000);
-        
-        // Animate counter on load
-        let count = 0;
-        const target = 142893;
-        const duration = 2000;
-        const increment = target / (duration / 16);
+        // 2. Live Player Counter
+        const counterEl = document.getElementById('liveCounter');
+        const targetCount = 142893;
+        let currentCount = 0;
         
         function animateCounter() {
-            count += increment;
-            if (count < target) {
-                counter.textContent = Math.floor(count).toLocaleString();
+            const increment = targetCount / (2000 / 16);
+            currentCount += increment;
+            if (currentCount < targetCount) {
+                counterEl.textContent = Math.floor(currentCount).toLocaleString();
                 requestAnimationFrame(animateCounter);
             } else {
-                counter.textContent = target.toLocaleString();
+                counterEl.textContent = targetCount.toLocaleString();
             }
         }
-        setTimeout(animateCounter, 500);
+        setTimeout(animateCounter, 600);
 
-        // 3. Interactive 3D Character Drag Logic
-        const charContainer = document.getElementById('characterContainer');
-        const charScene = document.getElementById('characterScene');
-        let isDragging = false;
-        let startX, startY;
-        let currentRotateX = 0;
-        let currentRotateY = 0;
-        let autoRotate = true;
-        let autoRotateAngle = 0;
+        // Live fluctuation
+        setInterval(() => {
+            const variation = Math.floor(Math.random() * 1800) - 900;
+            const base = targetCount + variation;
+            counterEl.textContent = base.toLocaleString();
+        }, 4000);
 
-        // Auto-rotation when not interacting
-        function autoRotateLoop() {
-            if (autoRotate && !isDragging) {
-                autoRotateAngle += 0.3;
-                charScene.style.transform = `rotateY(${autoRotateAngle}deg) rotateX(${Math.sin(autoRotateAngle * 0.02) * 5}deg)`;
+        // 3. Download Stat Counter
+        const dlEl = document.getElementById('dlStat');
+        let dlCount = 0;
+        const dlTarget = 50;
+        function animateDL() {
+            dlCount += 0.4;
+            if (dlCount < dlTarget) {
+                dlEl.textContent = Math.floor(dlCount) + 'K+';
+                requestAnimationFrame(animateDL);
+            } else {
+                dlEl.textContent = '50K+';
             }
-            requestAnimationFrame(autoRotateLoop);
         }
-        autoRotateLoop();
+        setTimeout(animateDL, 800);
 
-        charContainer.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            autoRotate = false;
-            startX = e.clientX;
-            startY = e.clientY;
-            charContainer.style.cursor = 'grabbing';
-        });
+        // 4. Scroll Reveal Observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // 5. Parallax Background Glows on Mouse Move
         document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            currentRotateY += deltaX * 0.5;
-            currentRotateX -= deltaY * 0.5;
-            currentRotateX = Math.max(-45, Math.min(45, currentRotateX));
-            charScene.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
-            startX = e.clientX;
-            startY = e.clientY;
+            const mx = e.clientX / window.innerWidth - 0.5;
+            const my = e.clientY / window.innerHeight - 0.5;
+            document.querySelectorAll('.ambient-glow').forEach((glow, i) => {
+                const speed = (i + 1) * 25;
+                glow.style.transform = `translate(${mx * speed}px, ${my * speed}px) scale(${1 + i * 0.1})`;
+            });
         });
 
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            charContainer.style.cursor = 'grab';
-            setTimeout(() => { autoRotate = true; }, 3000);
+        // 6. Button Ripple Effect
+        document.querySelectorAll('.btn, .chip, .tool-tile, .dl-card, .panel-card, .hub-card').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const size = Math.max(rect.width, rect.height) * 1.2;
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 700);
+            });
         });
 
-        // Touch support for mobile
-        charContainer.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            autoRotate = false;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, {passive: false});
+        // 7. VIP Card Dynamic RGB Border
+        const vipCard = document.querySelector('.panel-card.vip');
+        let vipHue = 0;
+        function animateVIP() {
+            vipHue = (vipHue + 1) % 360;
+            vipCard.style.borderColor = `hsla(${vipHue}, 100%, 60%, 0.25)`;
+            vipCard.style.boxShadow = `0 0 40px hsla(${vipHue}, 100%, 50%, 0.08)`;
+            requestAnimationFrame(animateVIP);
+        }
+        if (vipCard) animateVIP();
 
-        document.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const deltaX = e.touches[0].clientX - startX;
-            const deltaY = e.touches[0].clientY - startY;
-            currentRotateY += deltaX * 0.8;
-            currentRotateX -= deltaY * 0.8;
-            currentRotateX = Math.max(-45, Math.min(45, currentRotateX));
-            charScene.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }, {passive: false});
-
-        document.addEventListener('touchend', () => {
-            isDragging = false;
-            setTimeout(() => { autoRotate = true; }, 3000);
-        });
-
-        // Mouse wheel zoom
-        charContainer.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const scale = parseFloat(charScene.dataset.scale || 1);
-            const newScale = Math.max(0.5, Math.min(1.5, scale - e.deltaY * 0.001));
-            charScene.dataset.scale = newScale;
-            charScene.style.scale = newScale;
-        });
-
-        // 4. Dragon & Fire Canvas Animation
-        const canvas = document.getElementById('dragonCanvas');
+        // 8. Dragon Canvas Animation System
+        const canvas = document.getElementById('dragonLayer');
         const ctx = canvas.getContext('2d');
         
         function resizeCanvas() {
@@ -1391,285 +1260,82 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Dragon state
-        const dragon = {
-            x: -200,
-            y: 100,
-            speed: 2,
-            wingPhase: 0,
-            fireParticles: [],
-            trailParticles: []
-        };
-
         class FireParticle {
-            constructor(x, y) {
+            constructor(x, y, vx, vy) {
                 this.x = x;
                 this.y = y;
-                this.vx = (Math.random() - 0.2) * 4;
-                this.vy = (Math.random() - 0.5) * 3;
+                this.vx = vx + (Math.random() - 0.3) * 3;
+                this.vy = vy + (Math.random() - 0.5) * 2.5;
                 this.life = 1;
-                this.decay = 0.01 + Math.random() * 0.02;
-                this.size = 5 + Math.random() * 15;
-                this.hue = 0 + Math.random() * 60; // Red to yellow
+                this.decay = 0.008 + Math.random() * 0.015;
+                this.size = 6 + Math.random() * 18;
+                this.hue = Math.random() > 0.3 ? 15 + Math.random() * 40 : 0; // Orange to yellow
+                this.grow = false;
             }
-            
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.05; // Gravity
+                this.vy += 0.04;
                 this.life -= this.decay;
-                this.size *= 0.98;
+                this.size *= 0.985;
+                this.vx *= 0.99;
             }
-            
-            draw(ctx) {
-                ctx.save();
-                ctx.globalAlpha = this.life;
-                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
-                gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, 0.8)`);
-                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+            draw(c) {
+                c.save();
+                c.globalAlpha = this.life * 0.9;
+                const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                grad.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 1)`);
+                grad.addColorStop(0.4, `hsla(${this.hue}, 100%, 55%, 0.8)`);
+                grad.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
+                c.fillStyle = grad;
+                c.beginPath();
+                c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                c.fill();
+                c.restore();
             }
         }
 
-        class TrailParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.life = 1;
-                this.decay = 0.02;
-                this.size = 2 + Math.random() * 3;
+        class Dragon {
+            constructor() {
+                this.reset();
+                this.fireParticles = [];
+                this.trailParticles = [];
+            }
+            
+            reset() {
+                this.x = -350;
+                this.y = canvas.height * 0.25;
+                this.speed = 1.8 + Math.random() * 0.6;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.cycle = 0;
             }
             
             update() {
-                this.life -= this.decay;
-                this.size *= 0.95;
-            }
-            
-            draw(ctx) {
-                ctx.save();
-                ctx.globalAlpha = this.life * 0.5;
-                ctx.fillStyle = 'rgba(0, 240, 255, 0.6)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function drawDragon(ctx, x, y, wingPhase) {
-            ctx.save();
-            ctx.translate(x, y);
-            
-            // Body
-            ctx.fillStyle = '#1a1a2e';
-            ctx.strokeStyle = '#00f0ff';
-            ctx.lineWidth = 2;
-            
-            // Main body shape
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.bezierCurveTo(20, -10, 40, -5, 60, 0);
-            ctx.bezierCurveTo(80, 5, 100, 0, 120, -5);
-            ctx.bezierCurveTo(100, 10, 80, 15, 60, 10);
-            ctx.bezierCurveTo(40, 15, 20, 10, 0, 0);
-            ctx.fill();
-            ctx.stroke();
-            
-            // Head
-            ctx.beginPath();
-            ctx.moveTo(120, -5);
-            ctx.lineTo(140, -15);
-            ctx.lineTo(145, -5);
-            ctx.lineTo(140, 5);
-            ctx.lineTo(120, 10);
-            ctx.fill();
-            ctx.stroke();
-            
-            // Eye
-            ctx.fillStyle = '#ff00a0';
-            ctx.beginPath();
-            ctx.arc(135, -5, 3, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Wing (animated)
-            const wingY = Math.sin(wingPhase) * 30;
-            ctx.beginPath();
-            ctx.moveTo(40, 0);
-            ctx.quadraticCurveTo(60, -40 + wingY, 80, -20 + wingY);
-            ctx.quadraticCurveTo(60, -10 + wingY * 0.5, 50, 0);
-            ctx.fillStyle = 'rgba(0, 240, 255, 0.1)';
-            ctx.fill();
-            ctx.stroke();
-            
-            // Tail
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.quadraticCurveTo(-30, -10, -50, 5);
-            ctx.quadraticCurveTo(-30, 10, 0, 5);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fill();
-            ctx.stroke();
-            
-            ctx.restore();
-        }
-
-        function animateDragon() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Update dragon position
-            dragon.x += dragon.speed;
-            dragon.y = 100 + Math.sin(dragon.x * 0.005) * 50;
-            dragon.wingPhase += 0.15;
-            
-            // Reset when off screen
-            if (dragon.x > canvas.width + 200) {
-                dragon.x = -200;
-                dragon.fireParticles = [];
-            }
-            
-            // Spawn fire particles from dragon mouth
-            if (Math.random() > 0.3) {
-                dragon.fireParticles.push(new FireParticle(dragon.x + 145, dragon.y - 5));
-            }
-            
-            // Spawn trail particles
-            if (Math.random() > 0.5) {
-                dragon.trailParticles.push(new TrailParticle(dragon.x + 20, dragon.y + 5));
-            }
-            
-            // Update and draw trail
-            dragon.trailParticles = dragon.trailParticles.filter(p => p.life > 0);
-            dragon.trailParticles.forEach(p => {
-                p.update();
-                p.draw(ctx);
-            });
-            
-            // Draw dragon
-            drawDragon(ctx, dragon.x, dragon.y, dragon.wingPhase);
-            
-            // Update and draw fire
-            dragon.fireParticles = dragon.fireParticles.filter(p => p.life > 0);
-            dragon.fireParticles.forEach(p => {
-                p.update();
-                p.draw(ctx);
-            });
-            
-            requestAnimationFrame(animateDragon);
-        }
-        
-        animateDragon();
-
-        // 5. Scroll Reveal Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                this.x += this.speed;
+                this.cycle += 0.012;
+                this.y = (canvas.height * 0.2) + Math.sin(this.cycle * 3) * 60 + Math.sin(this.cycle * 1.5) * 30;
+                this.wingPhase += 0.18;
+                
+                // Fire breath
+                if (Math.random() > 0.25) {
+                    const mouthX = this.x + 160;
+                    const mouthY = this.y - 5;
+                    this.fireParticles.push(new FireParticle(mouthX, mouthY, 3, 0.5));
                 }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // 6. Parallax Effect on Mouse Move
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth - 0.5;
-            const mouseY = e.clientY / window.innerHeight - 0.5;
-            
-            document.querySelectorAll('.bg-glow').forEach((glow, index) => {
-                const speed = (index + 1) * 20;
-                glow.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px) scale(${1 + index * 0.1})`;
-            });
-        });
-
-        // 7. Download Counter Animation
-        const dlCounter = document.getElementById('downloadCount');
-        let dlCount = 0;
-        const dlTarget = 50;
-        
-        function animateDlCounter() {
-            dlCount += 0.5;
-            if (dlCount < dlTarget) {
-                dlCounter.textContent = Math.floor(dlCount) + 'K+';
-                requestAnimationFrame(animateDlCounter);
-            } else {
-                dlCounter.textContent = '50K+';
-            }
-        }
-        setTimeout(animateDlCounter, 1000);
-
-        // 8. Dynamic RGB Border Effect for VIP Card
-        const vipCard = document.querySelector('.panel-card.vip');
-        let hue = 0;
-        
-        function animateVIPBorder() {
-            hue = (hue + 1) % 360;
-            vipCard.style.borderColor = `hsla(${hue}, 100%, 50%, 0.3)`;
-            vipCard.style.boxShadow = `0 0 30px hsla(${hue}, 100%, 50%, 0.1)`;
-            requestAnimationFrame(animateVIPBorder);
-        }
-        animateVIPBorder();
-
-        // 9. Button Click Effects
-        document.querySelectorAll('.btn, .btn-small, .tool-card').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
                 
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: rgba(255,255,255,0.3);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s ease-out;
-                    pointer-events: none;
-                `;
+                // Body trail (subtle mist)
+                if (Math.random() > 0.6) {
+                    this.trailParticles.push({
+                        x: this.x + 40,
+                        y: this.y + 10,
+                        life: 1,
+                        size: 3 + Math.random() * 4
+                    });
+                }
                 
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
+                if (this.x > canvas.width + 350) {
+                    this.reset();
+                }
                 
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-
-        // Add ripple keyframes dynamically
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes ripple {
-                to { transform: scale(2); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // 10. Ticker Speed Control based on visibility
-        document.addEventListener('visibilitychange', () => {
-            const ticker = document.querySelector('.ticker');
-            if (document.hidden) {
-                ticker.style.animationPlayState = 'paused';
-            } else {
-                ticker.style.animationPlayState = 'running';
-            }
-        });
-
-        console.log('%c KENZOHEX ', 'background: linear-gradient(90deg, #00f0ff, #ff00a0); color: #000; font-size: 24px; font-weight: bold; padding: 10px; border-radius: 8px;');
-        console.log('%c Free Fire Hub Initialized ', 'color: #00f0ff; font-size: 14px;');
-    </script>
-</body>
-</html>
+                this.fireParticles = this.fireParticles.filter(p => p.life > 0);
+                this
